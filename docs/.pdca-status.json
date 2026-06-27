@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-06-27T04:22:36.158Z",
+  "lastUpdated": "2026-06-27T05:22:28.577Z",
   "activeFeatures": [
     "ReservationCal",
     "firebase",
@@ -21,7 +21,11 @@
     "cancel",
     "embed",
     "expire-appointments",
-    "expire"
+    "expire",
+    "[token]",
+    "reminders",
+    "upload",
+    "logo"
   ],
   "primaryFeature": "ReservationCal",
   "features": {
@@ -34,9 +38,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:32:19.927Z",
-        "lastUpdated": "2026-06-27T01:49:22.737Z"
+        "lastUpdated": "2026-06-27T05:17:10.185Z"
       },
-      "lastFile": "/Users/jcsong/codework/ReservationCal/app/layout.tsx"
+      "lastFile": "/Users/jcsong/codework/ReservationCal/lib/validators.ts"
     },
     "firebase": {
       "phase": "do",
@@ -47,9 +51,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:33:08.643Z",
-        "lastUpdated": "2026-06-26T14:48:29.023Z"
+        "lastUpdated": "2026-06-27T04:52:43.870Z"
       },
-      "lastFile": "/Users/jcsong/codework/ReservationCal/lib/firebase/client.ts"
+      "lastFile": "/Users/jcsong/codework/ReservationCal/lib/firebase/admin.ts"
     },
     "google-calendar": {
       "phase": "do",
@@ -125,9 +129,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:35:37.434Z",
-        "lastUpdated": "2026-06-27T01:53:04.856Z"
+        "lastUpdated": "2026-06-27T05:05:31.994Z"
       },
-      "lastFile": "/Users/jcsong/codework/ReservationCal/components/dashboard/WorkingHoursEditor.tsx"
+      "lastFile": "/Users/jcsong/codework/ReservationCal/components/dashboard/AppointmentList.tsx"
     },
     "settings": {
       "phase": "do",
@@ -138,9 +142,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:36:03.909Z",
-        "lastUpdated": "2026-06-27T01:51:58.665Z"
+        "lastUpdated": "2026-06-27T05:22:28.577Z"
       },
-      "lastFile": "/Users/jcsong/codework/ReservationCal/app/(dashboard)/settings/page.tsx"
+      "lastFile": "/Users/jcsong/codework/ReservationCal/app/api/lawyers/settings/route.ts"
     },
     "email": {
       "phase": "do",
@@ -151,7 +155,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:40:31.007Z",
-        "lastUpdated": "2026-06-26T14:47:44.774Z"
+        "lastUpdated": "2026-06-27T04:57:11.731Z"
       },
       "lastFile": "/Users/jcsong/codework/ReservationCal/lib/email/send.ts"
     },
@@ -164,7 +168,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:40:41.093Z",
-        "lastUpdated": "2026-06-27T04:21:35.226Z"
+        "lastUpdated": "2026-06-27T05:01:44.970Z"
       },
       "lastFile": "/Users/jcsong/codework/ReservationCal/lib/appointments/booking.ts"
     },
@@ -177,9 +181,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:40:47.976Z",
-        "lastUpdated": "2026-06-26T14:42:01.443Z"
+        "lastUpdated": "2026-06-27T04:56:40.434Z"
       },
-      "lastFile": "/Users/jcsong/codework/ReservationCal/emails/appointment-expired.tsx"
+      "lastFile": "/Users/jcsong/codework/ReservationCal/emails/appointment-confirmed.tsx"
     },
     "[lawyerId]": {
       "phase": "do",
@@ -190,7 +194,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:40:52.687Z",
-        "lastUpdated": "2026-06-27T01:53:37.106Z"
+        "lastUpdated": "2026-06-27T05:04:21.104Z"
       },
       "lastFile": "/Users/jcsong/codework/ReservationCal/app/widget/[lawyerId]/WidgetClient.tsx"
     },
@@ -203,9 +207,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:41:13.945Z",
-        "lastUpdated": "2026-06-27T01:54:59.988Z"
+        "lastUpdated": "2026-06-27T05:05:16.265Z"
       },
-      "lastFile": "/Users/jcsong/codework/ReservationCal/components/widget/ConfirmationView.tsx"
+      "lastFile": "/Users/jcsong/codework/ReservationCal/components/widget/BookingForm.tsx"
     },
     "confirm": {
       "phase": "do",
@@ -284,6 +288,58 @@
         "lastUpdated": "2026-06-26T14:43:02.132Z"
       },
       "lastFile": "/Users/jcsong/codework/ReservationCal/app/api/cron/expire/route.ts"
+    },
+    "[token]": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-27T04:57:48.428Z",
+        "lastUpdated": "2026-06-27T04:58:41.090Z"
+      },
+      "lastFile": "/Users/jcsong/codework/ReservationCal/app/appointment/[token]/page.tsx"
+    },
+    "reminders": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-27T04:59:04.178Z",
+        "lastUpdated": "2026-06-27T04:59:04.178Z"
+      },
+      "lastFile": "/Users/jcsong/codework/ReservationCal/app/api/cron/reminders/route.ts"
+    },
+    "upload": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-27T05:01:55.712Z",
+        "lastUpdated": "2026-06-27T05:01:55.712Z"
+      },
+      "lastFile": "/Users/jcsong/codework/ReservationCal/app/api/upload/route.ts"
+    },
+    "logo": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-27T05:02:06.679Z",
+        "lastUpdated": "2026-06-27T05:02:06.679Z"
+      },
+      "lastFile": "/Users/jcsong/codework/ReservationCal/app/api/lawyers/logo/route.ts"
     }
   },
   "pipeline": {
@@ -294,7 +350,7 @@
   "session": {
     "startedAt": "2026-06-26T14:01:45.875Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-06-27T04:22:36.158Z"
+    "lastActivity": "2026-06-27T05:22:28.577Z"
   },
   "history": [
     {
@@ -888,6 +944,276 @@
     {
       "timestamp": "2026-06-27T04:22:36.158Z",
       "feature": "expire-appointments",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:51:27.992Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:51:32.287Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:51:37.792Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:51:44.364Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:51:50.615Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:51:56.605Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:52:05.913Z",
+      "feature": "firebase",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:52:11.108Z",
+      "feature": "firebase",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:52:37.408Z",
+      "feature": "firebase",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:52:43.870Z",
+      "feature": "firebase",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:53:01.268Z",
+      "feature": "appointments",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:53:05.058Z",
+      "feature": "appointments",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:55:55.532Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:56:02.214Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:56:08.062Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:56:15.205Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:56:21.442Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:56:28.682Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:56:34.551Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:56:40.434Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:56:46.787Z",
+      "feature": "email",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:56:51.290Z",
+      "feature": "email",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:56:56.569Z",
+      "feature": "email",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:57:02.252Z",
+      "feature": "email",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:57:11.731Z",
+      "feature": "email",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:57:48.428Z",
+      "feature": "[token]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:58:31.233Z",
+      "feature": "[token]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:58:41.090Z",
+      "feature": "[token]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T04:59:04.178Z",
+      "feature": "reminders",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:01:39.602Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:01:44.970Z",
+      "feature": "appointments",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:01:55.712Z",
+      "feature": "upload",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:02:06.679Z",
+      "feature": "logo",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:02:25.594Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:03:46.711Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:03:52.645Z",
+      "feature": "[lawyerId]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:04:21.104Z",
+      "feature": "[lawyerId]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:05:16.265Z",
+      "feature": "widget",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:05:31.994Z",
+      "feature": "dashboard",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:17:10.185Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:20:53.950Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:21:58.467Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:22:08.420Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:22:20.008Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:22:28.577Z",
+      "feature": "settings",
       "phase": "do",
       "action": "updated"
     }

@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import type { AvailabilitySlot } from '@/types';
+import type { AvailabilitySlot, IntakeQuestion } from '@/types';
 import type { CreateAppointmentInput } from '@/lib/validators';
+import { UPLOAD_MAX_FILE_SIZE, UPLOAD_MAX_FILES, UPLOAD_ALLOWED_MIME_TYPES } from '@/lib/validators';
 
 interface BookingFormProps {
   lawyerId: string;
   slot: AvailabilitySlot;
   primaryColor?: string;
+  intakeQuestions?: IntakeQuestion[];
   onSuccess: (appointmentId: string) => void;
   onBack: () => void;
 }
@@ -69,7 +71,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
   );
 }
 
-export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', onSuccess, onBack }: BookingFormProps) {
+export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', intakeQuestions = [], onSuccess, onBack }: BookingFormProps) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -77,11 +79,16 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', onSucces
   const [captchaToken, setCaptchaToken] = useState('');
   const [submitState, setSubmitState] = useState<SubmitState>('idle');
   const [errorMsg, setErrorMsg] = useState('');
+  const [intakeAnswers, setIntakeAnswers] = useState<Record<string, string>>({});
+  const [files, setFiles] = useState<File[]>([]);
+  const [fileError, setFileError] = useState('');
   const captchaContainerRef = useRef<HTMLDivElement>(null);
   const captchaWidgetId = useRef<string>('');
 
   const clientTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const siteKey = process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY ?? '';
+
+  const allowedTypes: readonly string[] = UPLOAD_ALLOWED_MIME_TYPES;
 
   useEffect(() => {
     if (!siteKey || !captchaContainerRef.current) return;
@@ -112,12 +119,37 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', onSucces
     }
   }, [siteKey]);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFileError('');
+    const selected = Array.from(e.target.files ?? []);
+    if (selected.length > UPLOAD_MAX_FILES) {
+      setFileError(`파일은 최대 ${UPLOAD_MAX_FILES}개까지 첨부할 수 있습니다.`);
+      return;
+    }
+    for (const f of selected) {
+      if (f.size > UPLOAD_MAX_FILE_SIZE) {
+        setFileError(`파일 크기는 ${UPLOAD_MAX_FILE_SIZE / 1024 / 1024}MB 이하여야 합니다. (${f.name})`);
+        return;
+      }
+      if (!allowedTypes.includes(f.type)) {
+        setFileError(`허용되지 않는 파일 형식입니다. (${f.name})`);
+        return;
+      }
+    }
+    setFiles(selected);
+  };
+
   const validate = (): string | null => {
     if (!name.trim()) return '이름을 입력해주세요.';
     if (!phone.trim()) return '전화번호를 입력해주세요.';
     if (!email.trim() || !email.includes('@')) return '유효한 이메일 주소를 입력해주세요.';
     if (inquiry.trim().length < 10) return '문의 내용은 최소 10자 이상 입력해주세요.';
     if (siteKey && !captchaToken) return 'hCaptcha를 완료해주세요.';
+    for (const q of intakeQuestions) {
+      if (q.required && !intakeAnswers[q.id]?.trim()) {
+        return `"${q.label}" 항목은 필수입니다.`;
+      }
+    }
     return null;
   };
 
@@ -133,6 +165,35 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', onSucces
     setSubmitState('submitting');
     setErrorMsg('');
 
+    // Upload files first
+    let uploadedAttachments: { name: string; url: string; size: number; contentType: string }[] = [];
+    if (files.length > 0) {
+      try {
+        uploadedAttachments = await Promise.all(
+          files.map(async (file) => {
+            const fd = new FormData();
+            fd.append('file', file);
+            const res = await fetch('/api/upload', { method: 'POST', body: fd });
+            if (!res.ok) {
+              const body = await res.json() as { error?: string };
+              throw new Error(body.error ?? '파일 업로드 실패');
+            }
+            return res.json() as Promise<{ name: string; url: string; size: number; contentType: string }>;
+          })
+        );
+      } catch (err) {
+        setErrorMsg(err instanceof Error ? err.message : '파일 업로드 중 오류가 발생했습니다.');
+        setSubmitState('error');
+        return;
+      }
+    }
+
+    const answersArray = intakeQuestions.map((q) => ({
+      questionId: q.id,
+      label: q.label,
+      answer: intakeAnswers[q.id] ?? '',
+    }));
+
     const payload: CreateAppointmentInput = {
       lawyerId,
       slotStart: slot.start,
@@ -141,6 +202,8 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', onSucces
       clientTimezone,
       inquiry: inquiry.trim(),
       captchaToken: captchaToken || 'dev-bypass',
+      ...(answersArray.length > 0 ? { intakeAnswers: answersArray } : {}),
+      ...(uploadedAttachments.length > 0 ? { attachments: uploadedAttachments } : {}),
     };
 
     try {
@@ -204,7 +267,7 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', onSucces
         style={{
           background: '#EDF1F7',
           border: '1px solid #C8D3E3',
-          borderLeft: '3px solid #1A3050',
+          borderLeft: `3px solid ${primaryColor}`,
           borderRadius: '8px',
           padding: '14px 16px',
           marginBottom: '24px',
@@ -222,42 +285,15 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', onSucces
 
       <form onSubmit={(e) => void handleSubmit(e)}>
         <Field label="이름 *">
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="홍길동"
-            style={fieldStyle}
-            required
-            onFocus={focusStyle}
-            onBlur={blurStyle}
-          />
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="홍길동" style={fieldStyle} required onFocus={focusStyle} onBlur={blurStyle} />
         </Field>
 
         <Field label="전화번호 *">
-          <input
-            type="tel"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="010-0000-0000"
-            style={fieldStyle}
-            required
-            onFocus={focusStyle}
-            onBlur={blurStyle}
-          />
+          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="010-0000-0000" style={fieldStyle} required onFocus={focusStyle} onBlur={blurStyle} />
         </Field>
 
         <Field label="이메일 *">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="example@email.com"
-            style={fieldStyle}
-            required
-            onFocus={focusStyle}
-            onBlur={blurStyle}
-          />
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="example@email.com" style={fieldStyle} required onFocus={focusStyle} onBlur={blurStyle} />
         </Field>
 
         <Field label={`문의 내용 * (최소 10자)`}>
@@ -273,19 +309,68 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', onSucces
             onFocus={focusStyle}
             onBlur={blurStyle}
           />
-          <span
-            style={{
-              display: 'block',
-              textAlign: 'right',
-              fontSize: '11px',
-              color: inquiry.length >= 1800 ? '#DC2626' : '#94A3B8',
-              marginTop: '4px',
-              fontVariantNumeric: 'tabular-nums',
-            }}
-          >
+          <span style={{ display: 'block', textAlign: 'right', fontSize: '11px', color: inquiry.length >= 1800 ? '#DC2626' : '#94A3B8', marginTop: '4px', fontVariantNumeric: 'tabular-nums' }}>
             {inquiry.length}/2000
           </span>
         </Field>
+
+        {/* Intake questions */}
+        {intakeQuestions.length > 0 && (
+          <div style={{ marginBottom: '20px' }}>
+            <div
+              style={{
+                fontSize: '12px',
+                fontWeight: 700,
+                letterSpacing: '0.07em',
+                textTransform: 'uppercase',
+                color: '#64748B',
+                marginBottom: '12px',
+                paddingBottom: '8px',
+                borderBottom: '1px solid #E8EDF4',
+              }}
+            >
+              사전 질문
+            </div>
+            {intakeQuestions.map((q) => (
+              <Field key={q.id} label={`${q.label}${q.required ? ' *' : ''}`}>
+                <textarea
+                  value={intakeAnswers[q.id] ?? ''}
+                  onChange={(e) => setIntakeAnswers((prev) => ({ ...prev, [q.id]: e.target.value }))}
+                  rows={3}
+                  style={{ ...fieldStyle, resize: 'vertical' }}
+                  required={q.required}
+                  onFocus={focusStyle}
+                  onBlur={blurStyle}
+                />
+              </Field>
+            ))}
+          </div>
+        )}
+
+        {/* File attachments */}
+        <div style={{ marginBottom: '20px' }}>
+          <label style={labelStyle}>첨부파일 (선택, 최대 {UPLOAD_MAX_FILES}개)</label>
+          <input
+            type="file"
+            multiple
+            accept={allowedTypes.join(',')}
+            onChange={handleFileChange}
+            style={{ ...fieldStyle, padding: '8px 14px', cursor: 'pointer' }}
+          />
+          {fileError && (
+            <p style={{ fontSize: '12px', color: '#DC2626', marginTop: '4px' }}>{fileError}</p>
+          )}
+          {files.length > 0 && (
+            <ul style={{ fontSize: '12px', color: '#64748B', marginTop: '6px', paddingLeft: '16px' }}>
+              {files.map((f, i) => (
+                <li key={i}>{f.name} ({(f.size / 1024).toFixed(1)} KB)</li>
+              ))}
+            </ul>
+          )}
+          <p style={{ fontSize: '11px', color: '#94A3B8', marginTop: '4px' }}>
+            허용 형식: PDF, PNG, JPG, WEBP, DOC, DOCX, HWP · 파일당 최대 {UPLOAD_MAX_FILE_SIZE / 1024 / 1024}MB
+          </p>
+        </div>
 
         {/* hCaptcha */}
         {siteKey && (

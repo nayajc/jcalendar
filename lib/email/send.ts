@@ -19,6 +19,7 @@ import AppointmentConfirmed from '@/emails/appointment-confirmed';
 import AppointmentRejected from '@/emails/appointment-rejected';
 import AppointmentCancelled from '@/emails/appointment-cancelled';
 import AppointmentExpired from '@/emails/appointment-expired';
+import AppointmentReminder from '@/emails/appointment-reminder';
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? '';
 const DATE_FORMAT = "yyyy년 MM월 dd일 HH:mm (zzz)";
@@ -37,6 +38,10 @@ function formatSlot(
 
 function widgetUrl(appointment: Appointment): string {
   return `${BASE_URL}/widget/${appointment.lawyerId}`;
+}
+
+function manageUrl(appointment: Appointment): string {
+  return `${BASE_URL}/appointment/${appointment.cancelToken}`;
 }
 
 /**
@@ -73,6 +78,7 @@ export async function sendPendingEmails(
         slotEndFormatted: clientSlot.end,
         inquiry: appointment.inquiry,
         widgetUrl: widgetUrl(appointment),
+        manageUrl: manageUrl(appointment),
       }),
     ),
   ]);
@@ -112,6 +118,7 @@ export async function sendConfirmedEmail(
       slotStartFormatted: clientSlot.start,
       slotEndFormatted: clientSlot.end,
       inquiry: appointment.inquiry,
+      manageUrl: manageUrl(appointment),
     }),
   );
 
@@ -207,6 +214,38 @@ export async function sendCancelledEmail(
       html,
     });
   }
+}
+
+/**
+ * 리마인더 cron 호출:
+ *  - 상담자에게 "24h/1h 전 리마인더" (clientTimezone 포맷)
+ */
+export async function sendReminderEmail(
+  appointment: Appointment,
+  lawyer: Lawyer,
+  kind: '24h' | '1h',
+): Promise<void> {
+  const clientSlot = formatSlot(appointment, appointment.clientTimezone);
+
+  const html = await render(
+    AppointmentReminder({
+      clientName: appointment.client.name,
+      lawyerName: lawyer.name,
+      slotStartFormatted: clientSlot.start,
+      slotEndFormatted: clientSlot.end,
+      kind,
+      manageUrl: manageUrl(appointment),
+    }),
+  );
+
+  const kindLabel = kind === '24h' ? '24시간 전' : '1시간 전';
+  const resend = getResend();
+  await resend.emails.send({
+    from: getEmailFrom(),
+    to: appointment.client.email,
+    subject: `[${kindLabel} 알림] ${lawyer.name} 변호사 상담 — ${clientSlot.start}`,
+    html,
+  });
 }
 
 /**

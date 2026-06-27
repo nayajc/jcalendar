@@ -12,50 +12,48 @@ import {
 } from '@react-email/components';
 import * as React from 'react';
 
-export interface AppointmentPendingProps {
+export interface AppointmentReminderProps {
   clientName: string;
   lawyerName: string;
   slotStartFormatted: string;
   slotEndFormatted: string;
-  inquiry: string;
-  widgetUrl?: string;
+  kind: '24h' | '1h';
   manageUrl?: string;
 }
 
-export default function AppointmentPending({
+export default function AppointmentReminder({
   clientName,
   lawyerName,
   slotStartFormatted,
   slotEndFormatted,
-  inquiry,
-  widgetUrl,
+  kind,
   manageUrl,
-}: AppointmentPendingProps) {
+}: AppointmentReminderProps) {
+  const kindLabel = kind === '24h' ? '24시간 전' : '1시간 전';
+  const kindDescription =
+    kind === '24h'
+      ? '내일 예정된 상담 일정을 안내드립니다. 준비사항을 미리 확인해 주세요.'
+      : '1시간 후 상담이 시작됩니다. 잊지 말고 준비해 주세요.';
+
   return (
     <Html lang="ko">
       <Head />
       <Preview>
-        {lawyerName} 변호사 상담 예약이 접수되었습니다 — 승인 대기 중
+        [{kindLabel} 알림] {lawyerName} 변호사 상담 예정 — {slotStartFormatted}
       </Preview>
       <Body style={main}>
         <Container style={container}>
-          <Heading style={h1}>상담 예약 접수 완료</Heading>
+          <Heading style={h1}>상담 일정 리마인더 ({kindLabel})</Heading>
           <Text style={text}>안녕하세요, {clientName}님.</Text>
-          <Text style={text}>
-            <strong>{lawyerName}</strong> 변호사님께 상담 예약이 정상적으로
-            접수되었습니다. 변호사님의 승인 후 확정 안내 메일을 보내드립니다.
-          </Text>
+          <Text style={text}>{kindDescription}</Text>
 
           <Section style={card}>
-            <Text style={cardTitle}>예약 정보</Text>
+            <Text style={cardTitle}>상담 예약 정보</Text>
             <Text style={cardRow}>
               <strong>일시:</strong> {slotStartFormatted} – {slotEndFormatted}
             </Text>
             <Text style={cardRow}>
               <strong>담당 변호사:</strong> {lawyerName}
-            </Text>
-            <Text style={cardRow}>
-              <strong>문의 내용:</strong> {inquiry}
             </Text>
           </Section>
 
@@ -69,17 +67,8 @@ export default function AppointmentPending({
 
           <Hr style={hr} />
           <Text style={footer}>
-            예약 승인까지 최대 24시간이 소요될 수 있습니다.
-            {widgetUrl && (
-              <>
-                {' '}
-                예약을 변경하시려면{' '}
-                <a href={widgetUrl} style={link}>
-                  여기
-                </a>
-                에서 새로 예약해 주세요.
-              </>
-            )}
+            본 메일은 자동 발송된 리마인더입니다. 일정 변경이 필요하시면 담당
+            변호사에게 직접 연락해 주세요.
           </Text>
         </Container>
       </Body>
@@ -104,7 +93,7 @@ const container: React.CSSProperties = {
 const h1: React.CSSProperties = {
   fontSize: '22px',
   fontWeight: '700',
-  color: '#111827',
+  color: '#1e3a5f',
   marginBottom: '16px',
 };
 
@@ -115,10 +104,11 @@ const text: React.CSSProperties = {
 };
 
 const card: React.CSSProperties = {
-  backgroundColor: '#f3f4f6',
+  backgroundColor: '#eff6ff',
   borderRadius: '6px',
   padding: '20px',
   margin: '24px 0',
+  borderLeft: '4px solid #1e3a5f',
 };
 
 const cardTitle: React.CSSProperties = {
@@ -134,11 +124,6 @@ const cardRow: React.CSSProperties = {
   fontSize: '14px',
   color: '#111827',
   margin: '6px 0',
-};
-
-const hr: React.CSSProperties = {
-  borderColor: '#e5e7eb',
-  margin: '24px 0',
 };
 
 const buttonSection: React.CSSProperties = {
@@ -157,13 +142,13 @@ const button: React.CSSProperties = {
   textDecoration: 'none',
 };
 
+const hr: React.CSSProperties = {
+  borderColor: '#e5e7eb',
+  margin: '24px 0',
+};
+
 const footer: React.CSSProperties = {
   fontSize: '13px',
   color: '#9ca3af',
   lineHeight: '1.5',
-};
-
-const link: React.CSSProperties = {
-  color: '#3b82f6',
-  textDecoration: 'underline',
 };

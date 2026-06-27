@@ -32,6 +32,14 @@
         { "fieldPath": "lawyerId", "order": "ASCENDING" },
         { "fieldPath": "slotStartUTC", "order": "ASCENDING" }
       ]
+    },
+    {
+      "collectionGroup": "appointments",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "status", "order": "ASCENDING" },
+        { "fieldPath": "slotStart", "order": "ASCENDING" }
+      ]
     }
   ],
   "fieldOverrides": []

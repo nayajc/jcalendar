@@ -2,7 +2,7 @@ import { getApps, initializeApp, cert, type App } from 'firebase-admin/app';
 import { getAuth, type Auth } from 'firebase-admin/auth';
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 
-function getAdminApp(): App {
+export function getAdminApp(): App {
   if (getApps().length > 0) {
     return getApps()[0]!;
   }
@@ -15,6 +15,7 @@ function getAdminApp(): App {
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
       privateKey,
     }),
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   });
 }
 

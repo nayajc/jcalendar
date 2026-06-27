@@ -162,6 +162,61 @@ export default function AppointmentList({ appointments, lawyerTimezone }: Appoin
               >
                 {appt.inquiry}
               </p>
+
+              {/* Intake answers */}
+              {appt.intakeAnswers && appt.intakeAnswers.length > 0 && (
+                <div
+                  style={{
+                    marginTop: '8px',
+                    background: '#F8FAFC',
+                    border: '1px solid var(--rule)',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: '10px 12px',
+                  }}
+                >
+                  <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>
+                    사전 질문 답변
+                  </p>
+                  {appt.intakeAnswers.map((ans) => (
+                    <div key={ans.questionId} style={{ marginBottom: '6px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--navy)' }}>{ans.label}: </span>
+                      <span style={{ fontSize: '12px', color: 'var(--ink)' }}>{ans.answer}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Attachments */}
+              {appt.attachments && appt.attachments.length > 0 && (
+                <div
+                  style={{
+                    marginTop: '8px',
+                    background: '#F8FAFC',
+                    border: '1px solid var(--rule)',
+                    borderRadius: 'var(--radius-sm)',
+                    padding: '10px 12px',
+                  }}
+                >
+                  <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>
+                    첨부파일
+                  </p>
+                  {appt.attachments.map((att, i) => (
+                    <div key={i} style={{ marginBottom: '4px' }}>
+                      <a
+                        href={att.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: '13px', color: 'var(--navy)', textDecoration: 'underline', fontWeight: 500 }}
+                      >
+                        {att.name}
+                      </a>
+                      <span style={{ fontSize: '11px', color: 'var(--muted)', marginLeft: '6px' }}>
+                        ({(att.size / 1024).toFixed(1)} KB)
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Right: actions */}

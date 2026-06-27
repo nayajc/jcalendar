@@ -19,6 +19,14 @@ export interface GoogleCalendarConfig {
 export interface EmbedConfig {
   primaryColor?: string;
   customMessage?: string;
+  logoUrl?: string;
+  introText?: string;
+}
+
+export interface IntakeQuestion {
+  id: string;
+  label: string;
+  required: boolean;
 }
 
 export interface Lawyer {
@@ -31,6 +39,7 @@ export interface Lawyer {
   bufferMinutes: number; // 슬롯 간 버퍼 (분)
   googleCalendar?: GoogleCalendarConfig;
   embedConfig: EmbedConfig;
+  intakeQuestions?: IntakeQuestion[];
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -62,6 +71,11 @@ export interface Appointment {
   client: ClientInfo;
   clientTimezone: string; // IANA TZ
   inquiry: string;
+  cancelToken: string;
+  reminded24h?: boolean;
+  reminded1h?: boolean;
+  intakeAnswers?: { questionId: string; label: string; answer: string }[];
+  attachments?: { name: string; url: string; size: number; contentType: string }[];
   googleEventId?: string;
   confirmedAt?: Timestamp;
   rejectedAt?: Timestamp;

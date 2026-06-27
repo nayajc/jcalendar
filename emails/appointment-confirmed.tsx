@@ -5,6 +5,7 @@ import {
   Heading,
   Hr,
   Html,
+  Link,
   Preview,
   Section,
   Text,
@@ -17,6 +18,7 @@ export interface AppointmentConfirmedProps {
   slotStartFormatted: string;
   slotEndFormatted: string;
   inquiry: string;
+  manageUrl?: string;
 }
 
 export default function AppointmentConfirmed({
@@ -25,6 +27,7 @@ export default function AppointmentConfirmed({
   slotStartFormatted,
   slotEndFormatted,
   inquiry,
+  manageUrl,
 }: AppointmentConfirmedProps) {
   return (
     <Html lang="ko">
@@ -53,6 +56,14 @@ export default function AppointmentConfirmed({
               <strong>문의 내용:</strong> {inquiry}
             </Text>
           </Section>
+
+          {manageUrl && (
+            <Section style={buttonSection}>
+              <Link href={manageUrl} style={button}>
+                예약 확인/취소하기
+              </Link>
+            </Section>
+          )}
 
           <Hr style={hr} />
           <Text style={footer}>
@@ -117,6 +128,22 @@ const cardRow: React.CSSProperties = {
 const hr: React.CSSProperties = {
   borderColor: '#e5e7eb',
   margin: '24px 0',
+};
+
+const buttonSection: React.CSSProperties = {
+  textAlign: 'center',
+  margin: '24px 0',
+};
+
+const button: React.CSSProperties = {
+  display: 'inline-block',
+  backgroundColor: '#1e3a5f',
+  color: '#ffffff',
+  fontSize: '15px',
+  fontWeight: '600',
+  padding: '12px 28px',
+  borderRadius: '6px',
+  textDecoration: 'none',
 };
 
 const footer: React.CSSProperties = {

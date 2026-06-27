@@ -26,8 +26,8 @@ export default async function WidgetPage({ params }: PageProps) {
     <WidgetClient
       lawyerId={lawyerId}
       lawyerName={lawyer.name}
-      primaryColor={lawyer.embedConfig.primaryColor}
-      customMessage={lawyer.embedConfig.customMessage}
+      embedConfig={lawyer.embedConfig}
+      intakeQuestions={lawyer.intakeQuestions ?? []}
     />
   );
 }

@@ -1,0 +1,10 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      // 클라이언트 직접 접근 전면 차단
+      // 업로드/다운로드는 서버 API(Admin SDK) 경유
+      allow read, write: if false;
+    }
+  }
+}

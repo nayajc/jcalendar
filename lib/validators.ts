@@ -16,6 +16,21 @@ export const createAppointmentSchema = z.object({
   clientTimezone: z.string().min(1, '타임존은 필수입니다'),
   inquiry: z.string().min(10, '문의 내용은 최소 10자 이상이어야 합니다').max(2000),
   captchaToken: z.string().min(1, 'hCaptcha 토큰은 필수입니다'),
+  intakeAnswers: z.array(
+    z.object({
+      questionId: z.string(),
+      label: z.string(),
+      answer: z.string(),
+    })
+  ).optional(),
+  attachments: z.array(
+    z.object({
+      name: z.string(),
+      url: z.string().url(),
+      size: z.number().int().positive(),
+      contentType: z.string(),
+    })
+  ).optional(),
 });
 
 export type CreateAppointmentInput = z.infer<typeof createAppointmentSchema>;
@@ -37,7 +52,16 @@ export const lawyerSettingsSchema = z.object({
   embedConfig: z.object({
     primaryColor: z.string().optional(),
     customMessage: z.string().max(500).optional(),
+    logoUrl: z.string().url().optional().or(z.literal('')),
+    introText: z.string().max(1000).optional(),
   }),
+  intakeQuestions: z.array(
+    z.object({
+      id: z.string().min(1),
+      label: z.string().min(1),
+      required: z.boolean(),
+    })
+  ).optional(),
 });
 
 export type LawyerSettingsInput = z.infer<typeof lawyerSettingsSchema>;
@@ -49,3 +73,17 @@ export const availabilityQuerySchema = z.object({
 });
 
 export type AvailabilityQuery = z.infer<typeof availabilityQuerySchema>;
+
+// 파일 업로드 검증 상수
+export const UPLOAD_MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+export const UPLOAD_ALLOWED_MIME_TYPES = [
+  'application/pdf',
+  'image/png',
+  'image/jpeg',
+  'image/webp',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/x-hwp',
+  'application/haansofthwp',
+] as const;
+export const UPLOAD_MAX_FILES = 5;

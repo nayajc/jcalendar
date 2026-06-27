@@ -1,4 +1,5 @@
 import { Timestamp, FieldValue } from 'firebase-admin/firestore';
+import { randomBytes } from 'crypto';
 import { adminDb } from '@/lib/firebase/admin';
 import { appointmentConverter, slotConverter, lawyerConverter } from '@/lib/firebase/converters';
 import { createCalendarEvent } from '@/lib/google-calendar/events';
@@ -72,6 +73,9 @@ export async function createAppointment(input: CreateAppointmentInput): Promise<
     client,
     clientTimezone,
     inquiry,
+    ...(input.intakeAnswers?.length ? { intakeAnswers: input.intakeAnswers } : {}),
+    ...(input.attachments?.length ? { attachments: input.attachments } : {}),
+    cancelToken: randomBytes(32).toString('hex'),
     createdAt: now,
     updatedAt: now,
   });

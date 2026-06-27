@@ -37,7 +37,7 @@ export async function PUT(req: Request) {
     );
   }
 
-  const { name, timezone, slotLength, bufferMinutes, workingHours, embedConfig } =
+  const { name, timezone, slotLength, bufferMinutes, workingHours, embedConfig, intakeQuestions } =
     parseResult.data;
 
   // Firestore 저장
@@ -53,6 +53,7 @@ export async function PUT(req: Request) {
         bufferMinutes,
         workingHours,
         embedConfig,
+        ...(intakeQuestions !== undefined ? { intakeQuestions } : {}),
         updatedAt: Timestamp.now(),
       },
       { merge: true }

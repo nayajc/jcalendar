@@ -4,15 +4,15 @@ import { useState } from 'react';
 import { SlotPicker } from '@/components/widget/SlotPicker';
 import { BookingForm } from '@/components/widget/BookingForm';
 import { ConfirmationView } from '@/components/widget/ConfirmationView';
-import type { AvailabilitySlot } from '@/types';
+import type { AvailabilitySlot, EmbedConfig, IntakeQuestion } from '@/types';
 
 type Step = 'pick' | 'form' | 'done';
 
 interface WidgetClientProps {
   lawyerId: string;
   lawyerName: string;
-  primaryColor?: string;
-  customMessage?: string;
+  embedConfig: EmbedConfig;
+  intakeQuestions: IntakeQuestion[];
 }
 
 const STEPS = [
@@ -24,12 +24,17 @@ const STEPS = [
 export function WidgetClient({
   lawyerId,
   lawyerName,
-  primaryColor = '#1A3050',
-  customMessage,
+  embedConfig,
+  intakeQuestions,
 }: WidgetClientProps) {
   const [step, setStep] = useState<Step>('pick');
   const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlot | null>(null);
   const [appointmentId, setAppointmentId] = useState('');
+
+  const primaryColor = embedConfig.primaryColor ?? '#1A3050';
+  const customMessage = embedConfig.customMessage;
+  const introText = embedConfig.introText;
+  const logoUrl = embedConfig.logoUrl;
 
   const handleSlotSelected = (slot: AvailabilitySlot) => {
     setSelectedSlot(slot);
@@ -58,40 +63,58 @@ export function WidgetClient({
         style={{
           marginBottom: '28px',
           paddingBottom: '20px',
-          borderBottom: '2px solid #1A3050',
+          borderBottom: `2px solid ${primaryColor}`,
         }}
       >
-        {/* Brand mark */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <rect width="24" height="24" rx="4" fill="#1A3050" />
-            <path
-              d="M12 4v16M8 20h8M6 8l6-1 6 1M6 8l-2 4h4L6 8zM18 8l-2 4h4L18 8z"
-              stroke="#C6912A"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-          <span
-            style={{
-              fontSize: '12px',
-              fontWeight: 700,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: '#64748B',
-            }}
-          >
-            법률 상담 예약
-          </span>
-        </div>
+        {/* Logo */}
+        {logoUrl && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={logoUrl}
+            alt="로고"
+            style={{ maxHeight: '48px', maxWidth: '160px', objectFit: 'contain', marginBottom: '12px', display: 'block' }}
+          />
+        )}
+
+        {/* Brand mark (show if no logo) */}
+        {!logoUrl && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <rect width="24" height="24" rx="4" fill={primaryColor} />
+              <path
+                d="M12 4v16M8 20h8M6 8l6-1 6 1M6 8l-2 4h4L6 8zM18 8l-2 4h4L18 8z"
+                stroke="#C6912A"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span
+              style={{
+                fontSize: '12px',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: '#64748B',
+              }}
+            >
+              법률 상담 예약
+            </span>
+          </div>
+        )}
+
+        {introText && (
+          <p style={{ fontSize: '13px', color: '#64748B', marginBottom: '8px', lineHeight: 1.6 }}>
+            {introText}
+          </p>
+        )}
 
         <h1
           style={{
             margin: 0,
             fontSize: '22px',
             fontWeight: 700,
-            color: '#1A3050',
+            color: primaryColor,
             lineHeight: 1.2,
           }}
         >
@@ -122,7 +145,7 @@ export function WidgetClient({
                     width: '22px',
                     height: '22px',
                     borderRadius: '50%',
-                    background: done ? '#0F6E3E' : active ? '#1A3050' : '#E8EDF4',
+                    background: done ? '#0F6E3E' : active ? primaryColor : '#E8EDF4',
                     color: done || active ? '#fff' : '#94A3B8',
                     display: 'flex',
                     alignItems: 'center',
@@ -139,7 +162,7 @@ export function WidgetClient({
                   style={{
                     fontSize: '12px',
                     fontWeight: active ? 700 : 400,
-                    color: active ? '#1A3050' : done ? '#0F6E3E' : '#94A3B8',
+                    color: active ? primaryColor : done ? '#0F6E3E' : '#94A3B8',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -176,6 +199,7 @@ export function WidgetClient({
           lawyerId={lawyerId}
           slot={selectedSlot}
           primaryColor={primaryColor}
+          intakeQuestions={intakeQuestions}
           onSuccess={handleSuccess}
           onBack={() => setStep('pick')}
         />
