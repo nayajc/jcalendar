@@ -17,8 +17,8 @@ const notoSans = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
-  title: '법률 상담 예약 관리',
-  description: '변호사 상담 예약 캘린더 SaaS',
+  title: '전문 상담 예약 관리',
+  description: '상담사 예약 캘린더 SaaS',
 };
 
 export default function RootLayout({

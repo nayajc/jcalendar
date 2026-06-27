@@ -82,7 +82,7 @@ export function WidgetClient({
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <rect width="24" height="24" rx="4" fill={primaryColor} />
               <path
-                d="M12 4v16M8 20h8M6 8l6-1 6 1M6 8l-2 4h4L6 8zM18 8l-2 4h4L18 8z"
+                d="M7 3v3M17 3v3M4 9h16M5 6h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1z"
                 stroke="#C6912A"
                 strokeWidth="1.5"
                 strokeLinecap="round"
@@ -98,7 +98,7 @@ export function WidgetClient({
                 color: '#64748B',
               }}
             >
-              법률 상담 예약
+              전문 상담 예약
             </span>
           </div>
         )}
@@ -118,7 +118,7 @@ export function WidgetClient({
             lineHeight: 1.2,
           }}
         >
-          {lawyerName} 변호사
+          {lawyerName}
         </h1>
         <p style={{ margin: '6px 0 0', fontSize: '14px', color: '#64748B', lineHeight: 1.5 }}>
           {customMessage ?? '상담 예약을 신청해주세요. 확정 시 이메일로 안내드립니다.'}

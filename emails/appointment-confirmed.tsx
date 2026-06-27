@@ -40,7 +40,7 @@ export default function AppointmentConfirmed({
           <Heading style={h1}>상담 예약 확정</Heading>
           <Text style={text}>안녕하세요, {clientName}님.</Text>
           <Text style={text}>
-            <strong>{lawyerName}</strong> 변호사님과의 상담 예약이{' '}
+            <strong>{lawyerName}</strong>님과의 상담 예약이{' '}
             <strong>확정</strong>되었습니다. 예약 시간에 맞춰 준비해 주세요.
           </Text>
 
@@ -50,7 +50,7 @@ export default function AppointmentConfirmed({
               <strong>일시:</strong> {slotStartFormatted} – {slotEndFormatted}
             </Text>
             <Text style={cardRow}>
-              <strong>담당 변호사:</strong> {lawyerName}
+              <strong>담당 상담사:</strong> {lawyerName}
             </Text>
             <Text style={cardRow}>
               <strong>문의 내용:</strong> {inquiry}
@@ -67,7 +67,7 @@ export default function AppointmentConfirmed({
 
           <Hr style={hr} />
           <Text style={footer}>
-            일정 변경이 필요하시면 담당 변호사에게 직접 연락해 주세요.
+            일정 변경이 필요하시면 담당 상담사에게 직접 연락해 주세요.
           </Text>
         </Container>
       </Body>

@@ -58,7 +58,7 @@ export default function LoginPage() {
               marginBottom: '6px',
             }}
           >
-            변호사 로그인
+            상담사 로그인
           </h1>
           <p style={{ fontSize: '14px', color: 'var(--muted)' }}>
             계정 정보를 입력하여 대시보드에 접속하세요.
@@ -77,7 +77,7 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               className="field-input"
-              placeholder="lawyer@lawfirm.com"
+              placeholder="consultant@example.com"
               autoComplete="email"
             />
           </div>
@@ -116,7 +116,7 @@ export default function LoginPage() {
       </div>
 
       <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--muted-light)', marginTop: '24px' }}>
-        본 시스템은 등록된 변호사만 접속 가능합니다.
+        본 시스템은 등록된 상담사만 접속 가능합니다.
       </p>
     </div>
   );

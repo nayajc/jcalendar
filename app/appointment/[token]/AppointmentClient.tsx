@@ -84,7 +84,7 @@ export default function AppointmentClient({ token, initialData }: Props) {
       <div style={styles.card}>
         {/* Header */}
         <div style={styles.header}>
-          <div style={styles.logoMark}>법률 상담</div>
+          <div style={styles.logoMark}>전문 상담</div>
           <h1 style={styles.title}>내 예약 확인</h1>
         </div>
 
@@ -99,7 +99,7 @@ export default function AppointmentClient({ token, initialData }: Props) {
         {/* Reservation details */}
         <div style={styles.section}>
           <div style={styles.row}>
-            <span style={styles.label}>담당 변호사</span>
+            <span style={styles.label}>담당 상담사</span>
             <span style={styles.value}>{data.lawyerName}</span>
           </div>
           <div style={styles.row}>
@@ -140,14 +140,14 @@ export default function AppointmentClient({ token, initialData }: Props) {
         ) : (
           <div style={styles.infoBox}>
             {data.status === 'cancelled' &&
-              `이 예약은 ${data.cancelledBy === 'lawyer' ? '변호사에 의해' : '귀하에 의해'} 취소된 예약입니다.`}
+              `이 예약은 ${data.cancelledBy === 'lawyer' ? '상담사에 의해' : '귀하에 의해'} 취소된 예약입니다.`}
             {data.status === 'expired' && '이 예약은 기간이 만료되었습니다.'}
-            {data.status === 'rejected' && '이 예약은 변호사에 의해 거절되었습니다.'}
+            {data.status === 'rejected' && '이 예약은 상담사에 의해 거절되었습니다.'}
           </div>
         )}
 
         <div style={styles.footer}>
-          상담 일정 관련 문의는 담당 변호사에게 직접 연락해 주세요.
+          상담 일정 관련 문의는 담당 상담사에게 직접 연락해 주세요.
         </div>
       </div>
     </div>

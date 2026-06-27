@@ -133,14 +133,14 @@ export default function SettingsPage() {
         <div className="card">
           <h2 style={cardHeadingStyle}>기본 설정</h2>
           <div style={{ marginBottom: '20px' }}>
-            <label className="field-label" htmlFor="lawyer-name">변호사 이름</label>
+            <label className="field-label" htmlFor="lawyer-name">이름</label>
             <input
               id="lawyer-name"
               type="text"
               value={settings.name ?? ''}
               onChange={(e) => setSettings((s) => ({ ...s, name: e.target.value }))}
               className="field-input"
-              placeholder="예: 오수진 변호사"
+              placeholder="예: 오수진"
               required
             />
             <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '4px' }}>
@@ -301,7 +301,7 @@ export default function SettingsPage() {
         <div className="card">
           <h2 style={cardHeadingStyle}>사전 질문지</h2>
           <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '20px' }}>
-            의뢰인이 예약 시 답해야 할 사전 질문을 설정합니다.
+            고객이 예약 시 답해야 할 사전 질문을 설정합니다.
           </p>
           <IntakeQuestionsEditor
             value={(settings.intakeQuestions as IntakeQuestion[]) ?? []}

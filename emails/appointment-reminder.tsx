@@ -39,7 +39,7 @@ export default function AppointmentReminder({
     <Html lang="ko">
       <Head />
       <Preview>
-        [{kindLabel} 알림] {lawyerName} 변호사 상담 예정 — {slotStartFormatted}
+        [{kindLabel} 알림] {lawyerName} 상담 예정 — {slotStartFormatted}
       </Preview>
       <Body style={main}>
         <Container style={container}>
@@ -53,7 +53,7 @@ export default function AppointmentReminder({
               <strong>일시:</strong> {slotStartFormatted} – {slotEndFormatted}
             </Text>
             <Text style={cardRow}>
-              <strong>담당 변호사:</strong> {lawyerName}
+              <strong>담당 상담사:</strong> {lawyerName}
             </Text>
           </Section>
 
@@ -68,7 +68,7 @@ export default function AppointmentReminder({
           <Hr style={hr} />
           <Text style={footer}>
             본 메일은 자동 발송된 리마인더입니다. 일정 변경이 필요하시면 담당
-            변호사에게 직접 연락해 주세요.
+            상담사에게 직접 연락해 주세요.
           </Text>
         </Container>
       </Body>

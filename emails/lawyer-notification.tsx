@@ -39,7 +39,7 @@ export default function LawyerNotification({
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>새 상담 예약 알림</Heading>
-          <Text style={text}>안녕하세요, {lawyerName} 변호사님.</Text>
+          <Text style={text}>안녕하세요, {lawyerName}님.</Text>
           <Text style={text}>
             새로운 상담 예약이 접수되었습니다. 대시보드에서 승인 또는 거절해
             주세요.

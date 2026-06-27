@@ -29,13 +29,13 @@ export default function AppointmentRejected({
   return (
     <Html lang="ko">
       <Head />
-      <Preview>상담 예약이 거절되었습니다 — {lawyerName} 변호사</Preview>
+      <Preview>상담 예약이 거절되었습니다 — {lawyerName}</Preview>
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>상담 예약 거절</Heading>
           <Text style={text}>안녕하세요, {clientName}님.</Text>
           <Text style={text}>
-            죄송합니다. <strong>{lawyerName}</strong> 변호사님의 사정으로 인해
+            죄송합니다. <strong>{lawyerName}</strong>님의 사정으로 인해
             아래 예약 요청을 수락하기 어렵게 되었습니다.
           </Text>
 
@@ -45,7 +45,7 @@ export default function AppointmentRejected({
               <strong>일시:</strong> {slotStartFormatted} – {slotEndFormatted}
             </Text>
             <Text style={cardRow}>
-              <strong>담당 변호사:</strong> {lawyerName}
+              <strong>담당 상담사:</strong> {lawyerName}
             </Text>
           </Section>
 

@@ -35,7 +35,7 @@ export default function AppointmentExpired({
           <Heading style={h1}>상담 예약 만료</Heading>
           <Text style={text}>안녕하세요, {clientName}님.</Text>
           <Text style={text}>
-            죄송합니다. <strong>{lawyerName}</strong> 변호사님의 승인이 24시간
+            죄송합니다. <strong>{lawyerName}</strong>님의 승인이 24시간
             내 이루어지지 않아 아래 예약 요청이 자동 만료되었습니다.
           </Text>
 
@@ -45,7 +45,7 @@ export default function AppointmentExpired({
               <strong>일시:</strong> {slotStartFormatted} – {slotEndFormatted}
             </Text>
             <Text style={cardRow}>
-              <strong>담당 변호사:</strong> {lawyerName}
+              <strong>담당 상담사:</strong> {lawyerName}
             </Text>
           </Section>
 

@@ -30,7 +30,7 @@ export default function AppointmentCancelled({
   slotEndFormatted,
   widgetUrl,
 }: AppointmentCancelledProps) {
-  const cancellerLabel = cancelledBy === 'lawyer' ? `${lawyerName} 변호사` : `${clientName}님`;
+  const cancellerLabel = cancelledBy === 'lawyer' ? `${lawyerName} 상담사` : `${clientName}님`;
 
   return (
     <Html lang="ko">
@@ -51,7 +51,7 @@ export default function AppointmentCancelled({
               <strong>일시:</strong> {slotStartFormatted} – {slotEndFormatted}
             </Text>
             <Text style={cardRow}>
-              <strong>담당 변호사:</strong> {lawyerName}
+              <strong>담당 상담사:</strong> {lawyerName}
             </Text>
             <Text style={cardRow}>
               <strong>상담자:</strong> {clientName}
@@ -70,7 +70,7 @@ export default function AppointmentCancelled({
 
           <Hr style={hr} />
           <Text style={footer}>
-            문의 사항은 담당 변호사에게 직접 연락해 주세요.
+            문의 사항은 담당 상담사에게 직접 연락해 주세요.
           </Text>
         </Container>
       </Body>

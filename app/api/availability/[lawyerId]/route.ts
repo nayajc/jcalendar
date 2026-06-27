@@ -35,7 +35,7 @@ export async function GET(req: Request, { params }: RouteParams) {
     .get();
 
   if (!lawyerSnap.exists) {
-    return NextResponse.json({ error: '변호사를 찾을 수 없습니다' }, { status: 404 });
+    return NextResponse.json({ error: '상담사를 찾을 수 없습니다' }, { status: 404 });
   }
 
   const lawyer = lawyerSnap.data()!;

@@ -95,7 +95,7 @@ export async function sendPendingEmails(
     resend.emails.send({
       from: EMAIL_FROM,
       to: appointment.client.email,
-      subject: `[예약 접수] ${lawyer.name} 변호사 상담 예약이 접수되었습니다`,
+      subject: `[예약 접수] ${lawyer.name} 상담 예약이 접수되었습니다`,
       html: clientHtml,
     }),
   ]);
@@ -126,7 +126,7 @@ export async function sendConfirmedEmail(
   await resend.emails.send({
     from: getEmailFrom(),
     to: appointment.client.email,
-    subject: `[예약 확정] ${lawyer.name} 변호사 상담 — ${clientSlot.start}`,
+    subject: `[예약 확정] ${lawyer.name} 상담 — ${clientSlot.start}`,
     html,
   });
 }
@@ -155,7 +155,7 @@ export async function sendRejectedEmail(
   await resend.emails.send({
     from: getEmailFrom(),
     to: appointment.client.email,
-    subject: `[예약 거절] ${lawyer.name} 변호사 상담 예약을 수락하기 어렵습니다`,
+    subject: `[예약 거절] ${lawyer.name} 상담 예약을 수락하기 어렵습니다`,
     html,
   });
 }
@@ -191,7 +191,7 @@ export async function sendCancelledEmail(
     await resend.emails.send({
       from: EMAIL_FROM,
       to: appointment.client.email,
-      subject: `[예약 취소] ${lawyer.name} 변호사 상담 예약이 취소되었습니다`,
+      subject: `[예약 취소] ${lawyer.name} 상담 예약이 취소되었습니다`,
       html,
     });
   } else {
@@ -243,7 +243,7 @@ export async function sendReminderEmail(
   await resend.emails.send({
     from: getEmailFrom(),
     to: appointment.client.email,
-    subject: `[${kindLabel} 알림] ${lawyer.name} 변호사 상담 — ${clientSlot.start}`,
+    subject: `[${kindLabel} 알림] ${lawyer.name} 상담 — ${clientSlot.start}`,
     html,
   });
 }
@@ -272,7 +272,7 @@ export async function sendExpiredEmail(
   await resend.emails.send({
     from: getEmailFrom(),
     to: appointment.client.email,
-    subject: `[예약 만료] ${lawyer.name} 변호사 상담 예약이 만료되었습니다`,
+    subject: `[예약 만료] ${lawyer.name} 상담 예약이 만료되었습니다`,
     html,
   });
 }

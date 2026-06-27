@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '법률 상담 예약',
+  title: '전문 상담 예약',
 };
 
 export default function WidgetLayout({ children }: { children: React.ReactNode }) {

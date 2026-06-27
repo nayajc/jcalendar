@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // 예약 생성 입력 스키마
 export const createAppointmentSchema = z.object({
-  lawyerId: z.string().min(1, '변호사 ID는 필수입니다'),
+  lawyerId: z.string().min(1, '상담사 ID는 필수입니다'),
   slotStart: z.string().datetime({ message: '유효한 ISO 날짜시간 형식이어야 합니다' }),
   slotEnd: z.string().datetime({ message: '유효한 ISO 날짜시간 형식이어야 합니다' }),
   client: z.object({

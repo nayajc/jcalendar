@@ -35,15 +35,15 @@ export default function AppointmentPending({
     <Html lang="ko">
       <Head />
       <Preview>
-        {lawyerName} 변호사 상담 예약이 접수되었습니다 — 승인 대기 중
+        {lawyerName} 상담 예약이 접수되었습니다 — 승인 대기 중
       </Preview>
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>상담 예약 접수 완료</Heading>
           <Text style={text}>안녕하세요, {clientName}님.</Text>
           <Text style={text}>
-            <strong>{lawyerName}</strong> 변호사님께 상담 예약이 정상적으로
-            접수되었습니다. 변호사님의 승인 후 확정 안내 메일을 보내드립니다.
+            <strong>{lawyerName}</strong>님께 상담 예약이 정상적으로
+            접수되었습니다. 담당 상담사의 승인 후 확정 안내 메일을 보내드립니다.
           </Text>
 
           <Section style={card}>
@@ -52,7 +52,7 @@ export default function AppointmentPending({
               <strong>일시:</strong> {slotStartFormatted} – {slotEndFormatted}
             </Text>
             <Text style={cardRow}>
-              <strong>담당 변호사:</strong> {lawyerName}
+              <strong>담당 상담사:</strong> {lawyerName}
             </Text>
             <Text style={cardRow}>
               <strong>문의 내용:</strong> {inquiry}

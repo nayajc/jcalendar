@@ -38,7 +38,7 @@ export default async function EmbedPage() {
   height="700"
   frameborder="0"
   style="border-radius: 8px; border: 1px solid #C8D3E3;"
-  title="${lawyer?.name ?? '변호사'} 상담 예약"
+  title="${lawyer?.name ?? '상담사'} 상담 예약"
 ></iframe>`;
 
   return (
@@ -56,7 +56,7 @@ export default async function EmbedPage() {
           예약 위젯 임베드
         </h1>
         <p style={{ fontSize: '14px', color: 'var(--muted)', marginTop: '8px' }}>
-          아래 HTML 코드를 귀 사무소 홈페이지에 붙여넣으면 예약 위젯이 표시됩니다.
+          아래 HTML 코드를 귀하의 홈페이지에 붙여넣으면 예약 위젯이 표시됩니다.
         </p>
       </div>
 

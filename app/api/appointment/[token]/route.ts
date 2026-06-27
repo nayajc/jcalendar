@@ -209,7 +209,7 @@ export async function POST(
       await resend.emails.send({
         from: getEmailFrom(),
         to: cancelledAppt.client.email,
-        subject: `[예약 취소 완료] ${lawyer.name} 변호사 상담 예약이 취소되었습니다`,
+        subject: `[예약 취소 완료] ${lawyer.name} 상담 예약이 취소되었습니다`,
         html,
       });
     }
