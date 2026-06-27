@@ -82,7 +82,7 @@ export default async function DashboardLayout({
                 letterSpacing: '-0.01em',
               }}
             >
-              ConsultSchedule
+              JollySchedule
             </span>
           </a>
 

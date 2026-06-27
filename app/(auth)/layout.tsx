@@ -50,7 +50,7 @@ export default function AuthLayout({
               letterSpacing: '-0.02em',
             }}
           >
-            ConsultSchedule
+            JollySchedule
           </span>
         </div>
         <p
