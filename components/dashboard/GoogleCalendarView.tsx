@@ -1,6 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
+import { isInAppBrowser, isAndroid, toAndroidChromeIntentUrl } from '@/lib/in-app-browser';
 
 interface GoogleCalendarViewProps {
   isConnected: boolean;
@@ -10,6 +12,25 @@ interface GoogleCalendarViewProps {
 
 export function GoogleCalendarView({ isConnected, calendarId, authUrl }: GoogleCalendarViewProps) {
   const { t } = useLocale();
+  const [inAppBrowser, setInAppBrowser] = useState(false);
+  const [androidUa, setAndroidUa] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    setInAppBrowser(isInAppBrowser(ua));
+    setAndroidUa(isAndroid(ua));
+  }, []);
+
+  async function copyAuthUrl() {
+    try {
+      await navigator.clipboard.writeText(authUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  }
 
   return (
     <div>
@@ -92,13 +113,49 @@ export function GoogleCalendarView({ isConnected, calendarId, authUrl }: GoogleC
           {t('gcal.description')}
         </p>
 
-        <a
-          href={authUrl}
-          className="btn btn-primary"
-          style={{ padding: '12px 24px' }}
-        >
-          {isConnected ? t('gcal.reconnect') : t('gcal.connect')}
-        </a>
+        {inAppBrowser && (
+          <div
+            className="alert"
+            style={{
+              marginBottom: '16px',
+              fontSize: '13px',
+              lineHeight: '1.6',
+              background: 'var(--steel)',
+              border: '1px solid var(--rule)',
+              borderRadius: 'var(--radius-md)',
+              padding: '12px 16px',
+            }}
+          >
+            {t('gcal.inAppBrowserWarning')}
+          </div>
+        )}
+
+        {inAppBrowser && androidUa ? (
+          <a
+            href={toAndroidChromeIntentUrl(authUrl)}
+            className="btn btn-primary"
+            style={{ padding: '12px 24px' }}
+          >
+            {t('gcal.openInChrome')}
+          </a>
+        ) : inAppBrowser ? (
+          <button
+            type="button"
+            onClick={() => void copyAuthUrl()}
+            className="btn btn-primary"
+            style={{ padding: '12px 24px' }}
+          >
+            {copied ? t('gcal.linkCopied') : t('gcal.copyLink')}
+          </button>
+        ) : (
+          <a
+            href={authUrl}
+            className="btn btn-primary"
+            style={{ padding: '12px 24px' }}
+          >
+            {isConnected ? t('gcal.reconnect') : t('gcal.connect')}
+          </a>
+        )}
       </div>
     </div>
   );

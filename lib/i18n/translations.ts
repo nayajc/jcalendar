@@ -157,6 +157,13 @@ export const translations = {
   },
   'gcal.reconnect': { ko: 'Google Calendar 재연결', en: 'Reconnect Google Calendar' },
   'gcal.connect': { ko: 'Google Calendar 연결하기', en: 'Connect Google Calendar' },
+  'gcal.inAppBrowserWarning': {
+    ko: '현재 카카오톡/네이버 등 인앱 브라우저에서 열려 있습니다. Google은 이런 환경에서 로그인을 차단하므로, Chrome 등 일반 브라우저에서 열어주세요.',
+    en: 'You’re viewing this inside an in-app browser (e.g. KakaoTalk, Naver). Google blocks sign-in there, so please open this page in Chrome or another regular browser.',
+  },
+  'gcal.openInChrome': { ko: 'Chrome에서 열기', en: 'Open in Chrome' },
+  'gcal.copyLink': { ko: '링크 복사하기', en: 'Copy link' },
+  'gcal.linkCopied': { ko: '복사됨!', en: 'Copied!' },
 
   // embed page
   'embed.eyebrow': { ko: '배포', en: 'Deploy' },
