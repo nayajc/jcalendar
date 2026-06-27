@@ -1,6 +1,6 @@
 {
   "version": "2.0",
-  "lastUpdated": "2026-06-27T05:22:28.577Z",
+  "lastUpdated": "2026-06-27T07:25:12.771Z",
   "activeFeatures": [
     "ReservationCal",
     "firebase",
@@ -25,7 +25,8 @@
     "[token]",
     "reminders",
     "upload",
-    "logo"
+    "logo",
+    "public"
   ],
   "primaryFeature": "ReservationCal",
   "features": {
@@ -38,9 +39,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:32:19.927Z",
-        "lastUpdated": "2026-06-27T05:17:10.185Z"
+        "lastUpdated": "2026-06-27T07:25:12.771Z"
       },
-      "lastFile": "/Users/jcsong/codework/ReservationCal/lib/validators.ts"
+      "lastFile": "/Users/jcsong/codework/ReservationCal/app/layout.tsx"
     },
     "firebase": {
       "phase": "do",
@@ -77,7 +78,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:34:47.603Z",
-        "lastUpdated": "2026-06-27T01:49:43.664Z"
+        "lastUpdated": "2026-06-27T07:22:45.175Z"
       },
       "lastFile": "/Users/jcsong/codework/ReservationCal/app/(auth)/layout.tsx"
     },
@@ -90,7 +91,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:34:59.062Z",
-        "lastUpdated": "2026-06-27T01:49:58.332Z"
+        "lastUpdated": "2026-06-27T05:50:10.732Z"
       },
       "lastFile": "/Users/jcsong/codework/ReservationCal/app/(auth)/login/page.tsx"
     },
@@ -116,7 +117,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:35:25.956Z",
-        "lastUpdated": "2026-06-27T01:50:12.885Z"
+        "lastUpdated": "2026-06-27T07:22:50.698Z"
       },
       "lastFile": "/Users/jcsong/codework/ReservationCal/app/(dashboard)/layout.tsx"
     },
@@ -142,9 +143,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:36:03.909Z",
-        "lastUpdated": "2026-06-27T05:22:28.577Z"
+        "lastUpdated": "2026-06-27T05:50:35.084Z"
       },
-      "lastFile": "/Users/jcsong/codework/ReservationCal/app/api/lawyers/settings/route.ts"
+      "lastFile": "/Users/jcsong/codework/ReservationCal/app/(dashboard)/settings/page.tsx"
     },
     "email": {
       "phase": "do",
@@ -155,7 +156,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:40:31.007Z",
-        "lastUpdated": "2026-06-27T04:57:11.731Z"
+        "lastUpdated": "2026-06-27T05:53:18.544Z"
       },
       "lastFile": "/Users/jcsong/codework/ReservationCal/lib/email/send.ts"
     },
@@ -181,9 +182,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:40:47.976Z",
-        "lastUpdated": "2026-06-27T04:56:40.434Z"
+        "lastUpdated": "2026-06-27T05:52:44.592Z"
       },
-      "lastFile": "/Users/jcsong/codework/ReservationCal/emails/appointment-confirmed.tsx"
+      "lastFile": "/Users/jcsong/codework/ReservationCal/emails/lawyer-notification.tsx"
     },
     "[lawyerId]": {
       "phase": "do",
@@ -194,7 +195,7 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:40:52.687Z",
-        "lastUpdated": "2026-06-27T05:04:21.104Z"
+        "lastUpdated": "2026-06-27T06:02:20.749Z"
       },
       "lastFile": "/Users/jcsong/codework/ReservationCal/app/widget/[lawyerId]/WidgetClient.tsx"
     },
@@ -207,9 +208,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:41:13.945Z",
-        "lastUpdated": "2026-06-27T05:05:16.265Z"
+        "lastUpdated": "2026-06-27T06:13:53.643Z"
       },
-      "lastFile": "/Users/jcsong/codework/ReservationCal/components/widget/BookingForm.tsx"
+      "lastFile": "/Users/jcsong/codework/ReservationCal/components/widget/SlotPicker.tsx"
     },
     "confirm": {
       "phase": "do",
@@ -259,9 +260,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-26T14:42:49.398Z",
-        "lastUpdated": "2026-06-27T01:52:50.193Z"
+        "lastUpdated": "2026-06-27T06:02:31.183Z"
       },
-      "lastFile": "/Users/jcsong/codework/ReservationCal/app/(dashboard)/embed/CopyButton.tsx"
+      "lastFile": "/Users/jcsong/codework/ReservationCal/app/(dashboard)/embed/page.tsx"
     },
     "expire-appointments": {
       "phase": "do",
@@ -298,9 +299,9 @@
       "documents": {},
       "timestamps": {
         "started": "2026-06-27T04:57:48.428Z",
-        "lastUpdated": "2026-06-27T04:58:41.090Z"
+        "lastUpdated": "2026-06-27T05:53:33.060Z"
       },
-      "lastFile": "/Users/jcsong/codework/ReservationCal/app/appointment/[token]/page.tsx"
+      "lastFile": "/Users/jcsong/codework/ReservationCal/app/api/appointment/[token]/route.ts"
     },
     "reminders": {
       "phase": "do",
@@ -340,6 +341,19 @@
         "lastUpdated": "2026-06-27T05:02:06.679Z"
       },
       "lastFile": "/Users/jcsong/codework/ReservationCal/app/api/lawyers/logo/route.ts"
+    },
+    "public": {
+      "phase": "do",
+      "phaseNumber": 3,
+      "matchRate": null,
+      "iterationCount": 0,
+      "requirements": [],
+      "documents": {},
+      "timestamps": {
+        "started": "2026-06-27T07:24:50.910Z",
+        "lastUpdated": "2026-06-27T07:24:50.910Z"
+      },
+      "lastFile": "/Users/jcsong/codework/ReservationCal/public/sw.js"
     }
   },
   "pipeline": {
@@ -350,7 +364,7 @@
   "session": {
     "startedAt": "2026-06-26T14:01:45.875Z",
     "onboardingCompleted": false,
-    "lastActivity": "2026-06-27T05:22:28.577Z"
+    "lastActivity": "2026-06-27T07:25:12.771Z"
   },
   "history": [
     {
@@ -1214,6 +1228,408 @@
     {
       "timestamp": "2026-06-27T05:22:28.577Z",
       "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:49:56.010Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:49:59.574Z",
+      "feature": "(auth)",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:50:03.157Z",
+      "feature": "login",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:50:07.014Z",
+      "feature": "login",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:50:10.732Z",
+      "feature": "login",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:50:14.322Z",
+      "feature": "[lawyerId]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:50:17.956Z",
+      "feature": "[lawyerId]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:50:22.102Z",
+      "feature": "[lawyerId]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:50:26.708Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:50:30.592Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:50:35.084Z",
+      "feature": "settings",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:50:41.788Z",
+      "feature": "embed",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:50:52.380Z",
+      "feature": "[token]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:50:56.339Z",
+      "feature": "[token]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:51:01.140Z",
+      "feature": "[token]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:51:05.669Z",
+      "feature": "[token]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:51:10.273Z",
+      "feature": "[token]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:51:20.771Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:51:30.711Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:51:34.472Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:51:38.335Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:51:42.000Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:51:46.538Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:51:54.557Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:51:58.421Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:52:02.747Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:52:07.723Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:52:12.548Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:52:16.314Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:52:20.169Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:52:23.572Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:52:32.822Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:52:36.540Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:52:40.441Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:52:44.592Z",
+      "feature": "emails",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:52:53.192Z",
+      "feature": "email",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:52:57.555Z",
+      "feature": "email",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:53:05.558Z",
+      "feature": "email",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:53:10.099Z",
+      "feature": "email",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:53:14.338Z",
+      "feature": "email",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:53:18.544Z",
+      "feature": "email",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:53:22.804Z",
+      "feature": "widget",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:53:33.060Z",
+      "feature": "[token]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T05:53:41.138Z",
+      "feature": "[lawyerId]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T06:01:19.512Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T06:01:56.465Z",
+      "feature": "(dashboard)",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T06:02:06.054Z",
+      "feature": "(auth)",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T06:02:20.749Z",
+      "feature": "[lawyerId]",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T06:02:25.651Z",
+      "feature": "widget",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T06:02:31.183Z",
+      "feature": "embed",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T06:04:22.803Z",
+      "feature": "(auth)",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T06:04:27.254Z",
+      "feature": "(dashboard)",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T06:13:16.666Z",
+      "feature": "widget",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T06:13:25.775Z",
+      "feature": "widget",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T06:13:48.156Z",
+      "feature": "widget",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T06:13:53.643Z",
+      "feature": "widget",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T07:04:15.903Z",
+      "feature": "(auth)",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T07:04:43.561Z",
+      "feature": "(auth)",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T07:11:06.926Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T07:22:45.175Z",
+      "feature": "(auth)",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T07:22:50.698Z",
+      "feature": "(dashboard)",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T07:24:43.965Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T07:24:50.910Z",
+      "feature": "public",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T07:24:55.534Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T07:25:00.923Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T07:25:07.789Z",
+      "feature": "ReservationCal",
+      "phase": "do",
+      "action": "updated"
+    },
+    {
+      "timestamp": "2026-06-27T07:25:12.771Z",
+      "feature": "ReservationCal",
       "phase": "do",
       "action": "updated"
     }

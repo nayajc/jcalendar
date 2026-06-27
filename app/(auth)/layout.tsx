@@ -74,7 +74,7 @@ export default function AuthLayout({
                 letterSpacing: '-0.02em',
               }}
             >
-              JollySchedule
+              Jolly Calendar
             </span>
           </div>
 
