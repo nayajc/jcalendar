@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 변호사 문서: 본인만 읽기/쓰기
+    match /lawyers/{lawyerId} {
+      allow read, write: if request.auth != null && request.auth.uid == lawyerId;
+    }
+
+    // 예약: 변호사(본인 건만) 읽기/업데이트. 생성은 서버 API(Admin SDK) 전용
+    match /appointments/{appointmentId} {
+      allow read, update: if request.auth != null
+                          && request.auth.uid == resource.data.lawyerId;
+      allow create: if false;
+    }
+
+    // slots: 점유 락. 클라이언트 직접 접근 전면 차단 (Admin SDK 트랜잭션 전용)
+    match /slots/{slotId} {
+      allow read, write: if false;
+    }
+  }
+}
