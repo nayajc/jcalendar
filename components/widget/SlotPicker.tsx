@@ -1,6 +1,19 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
+import {
+  addMonths,
+  endOfMonth,
+  endOfWeek,
+  format,
+  isBefore,
+  isSameDay,
+  isSameMonth,
+  startOfDay,
+  startOfMonth,
+  startOfWeek,
+  subMonths,
+} from 'date-fns';
 import type { AvailabilitySlot } from '@/types';
 
 interface SlotPickerProps {
@@ -33,9 +46,12 @@ function toLocalDateString(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
+const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
+
 export function SlotPicker({ lawyerId, primaryColor = '#1A3050', onSlotSelected }: SlotPickerProps) {
-  const today = new Date();
+  const today = startOfDay(new Date());
   const [selectedDate, setSelectedDate] = useState<string>(toLocalDateString(today));
+  const [visibleMonth, setVisibleMonth] = useState<Date>(startOfMonth(today));
   const [slots, setSlots] = useState<AvailabilitySlot[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,12 +84,11 @@ export function SlotPicker({ lawyerId, primaryColor = '#1A3050', onSlotSelected 
     [lawyerId, clientTimezone]
   );
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newDate = e.target.value;
+  const handleDayClick = (day: Date) => {
+    if (isBefore(day, today)) return;
+    const newDate = toLocalDateString(day);
     setSelectedDate(newDate);
-    if (newDate) {
-      void fetchSlots(newDate);
-    }
+    void fetchSlots(newDate);
   };
 
   const handleSlotClick = (slot: AvailabilitySlot) => {
@@ -81,14 +96,29 @@ export function SlotPicker({ lawyerId, primaryColor = '#1A3050', onSlotSelected 
     onSlotSelected(slot);
   };
 
-  const minDate = toLocalDateString(today);
+  // 초기 진입 시 오늘 날짜 슬롯 자동 로드
+  useEffect(() => {
+    void fetchSlots(selectedDate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const calendarDays = useMemo(() => {
+    const gridStart = startOfWeek(startOfMonth(visibleMonth));
+    const gridEnd = endOfWeek(endOfMonth(visibleMonth));
+    const days: Date[] = [];
+    let cursor = gridStart;
+    while (cursor <= gridEnd) {
+      days.push(cursor);
+      cursor = new Date(cursor.getTime() + 24 * 60 * 60 * 1000);
+    }
+    return days;
+  }, [visibleMonth]);
 
   return (
     <div>
-      {/* Date picker */}
-      <div style={{ marginBottom: '24px' }}>
+      {/* Inline calendar */}
+      <div style={{ marginBottom: '20px' }}>
         <label
-          htmlFor="slot-date"
           style={{
             display: 'block',
             fontSize: '12px',
@@ -96,39 +126,141 @@ export function SlotPicker({ lawyerId, primaryColor = '#1A3050', onSlotSelected 
             letterSpacing: '0.08em',
             textTransform: 'uppercase',
             color: '#64748B',
-            marginBottom: '8px',
+            marginBottom: '10px',
           }}
         >
           날짜 선택
         </label>
-        <input
-          id="slot-date"
-          type="date"
-          value={selectedDate}
-          min={minDate}
-          onChange={handleDateChange}
+
+        {/* Month nav */}
+        <div
           style={{
-            border: '1px solid #C8D3E3',
-            borderRadius: '8px',
-            padding: '10px 14px',
-            fontSize: '14px',
-            width: '100%',
-            boxSizing: 'border-box',
-            fontFamily: 'inherit',
-            color: '#0F1923',
-            background: '#fff',
-            outline: 'none',
-            accentColor: primaryColor,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: '10px',
           }}
-          onFocus={(e) => {
-            e.currentTarget.style.borderColor = '#3D5A80';
-            e.currentTarget.style.boxShadow = '0 0 0 3px rgba(61,90,128,0.12)';
+        >
+          <button
+            type="button"
+            onClick={() => setVisibleMonth((m) => subMonths(m, 1))}
+            disabled={isSameMonth(visibleMonth, today)}
+            aria-label="이전 달"
+            style={{
+              border: '1px solid #C8D3E3',
+              background: '#fff',
+              borderRadius: '6px',
+              width: '32px',
+              height: '32px',
+              cursor: isSameMonth(visibleMonth, today) ? 'default' : 'pointer',
+              opacity: isSameMonth(visibleMonth, today) ? 0.35 : 1,
+              fontSize: '14px',
+              color: '#0F1923',
+            }}
+          >
+            ‹
+          </button>
+          <span style={{ fontSize: '14px', fontWeight: 700, color: '#0F1923' }}>
+            {format(visibleMonth, 'yyyy년 M월')}
+          </span>
+          <button
+            type="button"
+            onClick={() => setVisibleMonth((m) => addMonths(m, 1))}
+            aria-label="다음 달"
+            style={{
+              border: '1px solid #C8D3E3',
+              background: '#fff',
+              borderRadius: '6px',
+              width: '32px',
+              height: '32px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              color: '#0F1923',
+            }}
+          >
+            ›
+          </button>
+        </div>
+
+        {/* Weekday header */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            gap: '4px',
+            marginBottom: '4px',
           }}
-          onBlur={(e) => {
-            e.currentTarget.style.borderColor = '#C8D3E3';
-            e.currentTarget.style.boxShadow = 'none';
+        >
+          {WEEKDAY_LABELS.map((w) => (
+            <div
+              key={w}
+              style={{
+                textAlign: 'center',
+                fontSize: '11px',
+                fontWeight: 700,
+                color: '#94A3B8',
+                padding: '4px 0',
+              }}
+            >
+              {w}
+            </div>
+          ))}
+        </div>
+
+        {/* Day grid */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(7, 1fr)',
+            gap: '4px',
           }}
-        />
+        >
+          {calendarDays.map((day) => {
+            const inMonth = isSameMonth(day, visibleMonth);
+            const isPast = isBefore(day, today);
+            const isSelected = toLocalDateString(day) === selectedDate;
+            const isToday = isSameDay(day, today);
+            const disabled = isPast || !inMonth;
+
+            return (
+              <button
+                key={day.toISOString()}
+                type="button"
+                onClick={() => handleDayClick(day)}
+                disabled={disabled}
+                style={{
+                  aspectRatio: '1',
+                  border: isSelected ? `2px solid ${primaryColor}` : '1px solid transparent',
+                  borderRadius: '8px',
+                  background: isSelected ? primaryColor : isToday ? '#EDF1F7' : 'transparent',
+                  color: disabled
+                    ? '#CBD5E1'
+                    : isSelected
+                      ? '#fff'
+                      : '#0F1923',
+                  fontSize: '13px',
+                  fontWeight: isSelected || isToday ? 700 : 500,
+                  cursor: disabled ? 'default' : 'pointer',
+                  fontFamily: 'inherit',
+                  fontVariantNumeric: 'tabular-nums',
+                  transition: 'all 0.12s ease',
+                }}
+                onMouseEnter={(e) => {
+                  if (!disabled && !isSelected) {
+                    e.currentTarget.style.background = '#EDF1F7';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!disabled && !isSelected) {
+                    e.currentTarget.style.background = isToday ? '#EDF1F7' : 'transparent';
+                  }
+                }}
+              >
+                {day.getDate()}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Loading */}
