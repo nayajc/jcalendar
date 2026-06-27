@@ -1,18 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import type { Appointment } from '@/types';
+import type { ClientAppointment } from '@/types';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import type { TranslationKey } from '@/lib/i18n/translations';
 
 interface AppointmentListProps {
-  appointments: Appointment[];
+  appointments: ClientAppointment[];
   lawyerTimezone: string;
 }
 
-function formatSlot(appointment: Appointment, timezone: string, locale: string): string {
-  const start = appointment.slotStart.toDate();
-  const end = appointment.slotEnd.toDate();
+function formatSlot(appointment: ClientAppointment, timezone: string, locale: string): string {
+  const start = new Date(appointment.slotStart);
+  const end = new Date(appointment.slotEnd);
   const intlLocale = locale === 'en' ? 'en-US' : 'ko-KR';
 
   const fmt = new Intl.DateTimeFormat(intlLocale, {

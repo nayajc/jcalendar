@@ -2,11 +2,11 @@
 
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 import AppointmentList from '@/components/dashboard/AppointmentList';
-import type { Appointment } from '@/types';
+import type { ClientAppointment } from '@/types';
 
 interface AppointmentsViewProps {
-  pendingAppointments: Appointment[];
-  confirmedAppointments: Appointment[];
+  pendingAppointments: ClientAppointment[];
+  confirmedAppointments: ClientAppointment[];
   lawyerTimezone: string;
 }
 

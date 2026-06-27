@@ -3,7 +3,20 @@ import { redirect } from 'next/navigation';
 import { adminAuth, adminDb } from '@/lib/firebase/admin';
 import { appointmentConverter, lawyerConverter } from '@/lib/firebase/converters';
 import { AppointmentsView } from '@/components/dashboard/AppointmentsView';
-import type { Appointment } from '@/types';
+import type { Appointment, ClientAppointment } from '@/types';
+
+function toClientAppointment(a: Appointment): ClientAppointment {
+  return {
+    id: a.id,
+    status: a.status,
+    client: a.client,
+    inquiry: a.inquiry,
+    intakeAnswers: a.intakeAnswers,
+    attachments: a.attachments,
+    slotStart: a.slotStart.toDate().toISOString(),
+    slotEnd: a.slotEnd.toDate().toISOString(),
+  };
+}
 
 async function getAuthenticatedLawyerId(): Promise<string> {
   const cookieStore = await cookies();
@@ -47,8 +60,8 @@ export default async function AppointmentsPage() {
       .get(),
   ]);
 
-  const pendingAppointments: Appointment[] = pendingSnap.docs.map((d) => d.data());
-  const confirmedAppointments: Appointment[] = confirmedSnap.docs.map((d) => d.data());
+  const pendingAppointments: ClientAppointment[] = pendingSnap.docs.map((d) => toClientAppointment(d.data()));
+  const confirmedAppointments: ClientAppointment[] = confirmedSnap.docs.map((d) => toClientAppointment(d.data()));
 
   return (
     <AppointmentsView

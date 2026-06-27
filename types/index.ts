@@ -85,6 +85,17 @@ export interface Appointment {
   updatedAt: Timestamp;
 }
 
+// Plain, JSON-serializable projection of Appointment for passing from
+// Server Components into Client Components (Timestamps can't cross that
+// boundary as-is — see app/(dashboard)/appointments/page.tsx).
+export type ClientAppointment = Pick<
+  Appointment,
+  'id' | 'status' | 'client' | 'inquiry' | 'intakeAnswers' | 'attachments'
+> & {
+  slotStart: string; // ISO 8601
+  slotEnd: string; // ISO 8601
+};
+
 // -------------------------
 // Slot Lock Document
 // -------------------------
