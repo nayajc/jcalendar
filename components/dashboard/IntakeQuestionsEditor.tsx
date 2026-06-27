@@ -1,6 +1,7 @@
 'use client';
 
 import type { IntakeQuestion } from '@/types';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 interface IntakeQuestionsEditorProps {
   value: IntakeQuestion[];
@@ -12,6 +13,7 @@ function generateId(): string {
 }
 
 export function IntakeQuestionsEditor({ value, onChange }: IntakeQuestionsEditorProps) {
+  const { t } = useLocale();
   const addQuestion = () => {
     onChange([...value, { id: generateId(), label: '', required: false }]);
   };
@@ -50,7 +52,7 @@ export function IntakeQuestionsEditor({ value, onChange }: IntakeQuestionsEditor
     <div>
       {value.length === 0 && (
         <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '16px' }}>
-          아직 등록된 사전 질문이 없습니다.
+          {t('intake.empty')}
         </p>
       )}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '16px' }}>
@@ -93,7 +95,7 @@ export function IntakeQuestionsEditor({ value, onChange }: IntakeQuestionsEditor
                 type="text"
                 value={q.label}
                 onChange={(e) => updateQuestion(q.id, { label: e.target.value })}
-                placeholder="질문 내용을 입력하세요"
+                placeholder={t('intake.placeholder')}
                 style={inputStyle}
               />
               <label style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '8px', fontSize: '13px', color: 'var(--muted)', cursor: 'pointer' }}>
@@ -102,7 +104,7 @@ export function IntakeQuestionsEditor({ value, onChange }: IntakeQuestionsEditor
                   checked={q.required}
                   onChange={(e) => updateQuestion(q.id, { required: e.target.checked })}
                 />
-                필수 항목
+                {t('intake.required')}
               </label>
             </div>
 
@@ -111,7 +113,7 @@ export function IntakeQuestionsEditor({ value, onChange }: IntakeQuestionsEditor
               type="button"
               onClick={() => removeQuestion(q.id)}
               style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', fontSize: '18px', padding: '4px', flexShrink: 0 }}
-              aria-label="질문 삭제"
+              aria-label={t('intake.deleteAria')}
             >
               ×
             </button>
@@ -133,7 +135,7 @@ export function IntakeQuestionsEditor({ value, onChange }: IntakeQuestionsEditor
           fontFamily: 'inherit',
         }}
       >
-        + 질문 추가
+        {t('intake.add')}
       </button>
     </div>
   );

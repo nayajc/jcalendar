@@ -1,13 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
+import type { TranslationKey } from '@/lib/i18n/translations';
 
 interface AppointmentData {
   id: string;
   status: string;
   lawyerName: string;
-  slotStartFormatted: string;
-  slotEndFormatted: string;
+  slotStartIso: string;
+  slotEndIso: string;
   clientTimezone: string;
   inquiry: string;
   clientName: string;
@@ -19,12 +21,12 @@ interface Props {
   initialData: AppointmentData;
 }
 
-const STATUS_LABELS: Record<string, string> = {
-  pending: '승인 대기 중',
-  confirmed: '예약 확정',
-  cancelled: '취소됨',
-  expired: '만료됨',
-  rejected: '거절됨',
+const STATUS_KEY: Record<string, TranslationKey> = {
+  pending: 'appt.statusPending',
+  confirmed: 'appt.statusConfirmed',
+  cancelled: 'appt.statusCancelled',
+  expired: 'appt.statusExpired',
+  rejected: 'appt.statusRejected',
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -36,6 +38,7 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function AppointmentClient({ token, initialData }: Props) {
+  const { t, locale } = useLocale();
   const [data, setData] = useState<AppointmentData>(initialData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -43,8 +46,22 @@ export default function AppointmentClient({ token, initialData }: Props) {
 
   const canCancel = data.status === 'pending' || data.status === 'confirmed';
 
+  const intlLocale = locale === 'en' ? 'en-US' : 'ko-KR';
+  const dateFormatter = new Intl.DateTimeFormat(intlLocale, {
+    timeZone: data.clientTimezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZoneName: 'short',
+  });
+  const slotStartFormatted = dateFormatter.format(new Date(data.slotStartIso));
+  const slotEndFormatted = dateFormatter.format(new Date(data.slotEndIso));
+
   async function handleCancel() {
-    if (!confirm('예약을 취소하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) return;
+    if (!confirm(t('appt.confirmCancel'))) return;
 
     setLoading(true);
     setError(null);
@@ -56,27 +73,27 @@ export default function AppointmentClient({ token, initialData }: Props) {
 
       if (res.status === 409) {
         const body = await res.json() as { error?: string };
-        setError(body.error ?? '이미 처리된 예약입니다.');
+        setError(body.error ?? t('appt.alreadyProcessed'));
         setData((prev) => ({ ...prev, status: 'cancelled' }));
         return;
       }
 
       if (!res.ok) {
         const body = await res.json() as { error?: string };
-        setError(body.error ?? '취소 중 오류가 발생했습니다.');
+        setError(body.error ?? t('appt.cancelError'));
         return;
       }
 
       setCancelled(true);
       setData((prev) => ({ ...prev, status: 'cancelled' }));
     } catch {
-      setError('네트워크 오류가 발생했습니다. 다시 시도해 주세요.');
+      setError(t('appt.networkError'));
     } finally {
       setLoading(false);
     }
   }
 
-  const statusLabel = STATUS_LABELS[data.status] ?? data.status;
+  const statusLabel = STATUS_KEY[data.status] ? t(STATUS_KEY[data.status]!) : data.status;
   const statusColor = STATUS_COLORS[data.status] ?? '#374151';
 
   return (
@@ -84,8 +101,8 @@ export default function AppointmentClient({ token, initialData }: Props) {
       <div style={styles.card}>
         {/* Header */}
         <div style={styles.header}>
-          <div style={styles.logoMark}>전문 상담</div>
-          <h1 style={styles.title}>내 예약 확인</h1>
+          <div style={styles.logoMark}>{t('appt.logoMark')}</div>
+          <h1 style={styles.title}>{t('appt.pageTitle')}</h1>
         </div>
 
         {/* Status badge */}
@@ -99,19 +116,19 @@ export default function AppointmentClient({ token, initialData }: Props) {
         {/* Reservation details */}
         <div style={styles.section}>
           <div style={styles.row}>
-            <span style={styles.label}>담당 상담사</span>
+            <span style={styles.label}>{t('appt.lawyer')}</span>
             <span style={styles.value}>{data.lawyerName}</span>
           </div>
           <div style={styles.row}>
-            <span style={styles.label}>상담 일시</span>
-            <span style={styles.value}>{data.slotStartFormatted}</span>
+            <span style={styles.label}>{t('appt.start')}</span>
+            <span style={styles.value}>{slotStartFormatted}</span>
           </div>
           <div style={styles.row}>
-            <span style={styles.label}>상담 종료</span>
-            <span style={styles.value}>{data.slotEndFormatted}</span>
+            <span style={styles.label}>{t('appt.end')}</span>
+            <span style={styles.value}>{slotEndFormatted}</span>
           </div>
           <div style={styles.row}>
-            <span style={styles.label}>문의 내용</span>
+            <span style={styles.label}>{t('appt.inquiry')}</span>
             <span style={{ ...styles.value, whiteSpace: 'pre-wrap' }}>
               {data.inquiry}
             </span>
@@ -121,7 +138,7 @@ export default function AppointmentClient({ token, initialData }: Props) {
         {/* Cancel section */}
         {cancelled ? (
           <div style={styles.successBox}>
-            예약이 정상적으로 취소되었습니다. 확인 이메일이 발송됩니다.
+            {t('appt.cancelledSuccess')}
           </div>
         ) : canCancel ? (
           <div style={styles.actionSection}>
@@ -131,23 +148,23 @@ export default function AppointmentClient({ token, initialData }: Props) {
               disabled={loading}
               style={{ ...styles.cancelButton, opacity: loading ? 0.6 : 1 }}
             >
-              {loading ? '취소 처리 중...' : '예약 취소'}
+              {loading ? t('appt.cancelling') : t('appt.cancelButton')}
             </button>
             <p style={styles.cautionText}>
-              취소 후에는 되돌릴 수 없습니다.
+              {t('appt.cancelCaution')}
             </p>
           </div>
         ) : (
           <div style={styles.infoBox}>
             {data.status === 'cancelled' &&
-              `이 예약은 ${data.cancelledBy === 'lawyer' ? '상담사에 의해' : '귀하에 의해'} 취소된 예약입니다.`}
-            {data.status === 'expired' && '이 예약은 기간이 만료되었습니다.'}
-            {data.status === 'rejected' && '이 예약은 상담사에 의해 거절되었습니다.'}
+              (data.cancelledBy === 'lawyer' ? t('appt.cancelledByLawyer') : t('appt.cancelledByClient'))}
+            {data.status === 'expired' && t('appt.expiredNotice')}
+            {data.status === 'rejected' && t('appt.rejectedNotice')}
           </div>
         )}
 
         <div style={styles.footer}>
-          상담 일정 관련 문의는 담당 상담사에게 직접 연락해 주세요.
+          {t('appt.footer')}
         </div>
       </div>
     </div>

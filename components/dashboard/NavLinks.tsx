@@ -1,16 +1,18 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-
-const links = [
-  { href: '/dashboard', label: '대시보드' },
-  { href: '/appointments', label: '예약 관리' },
-  { href: '/settings', label: '설정' },
-  { href: '/embed', label: '위젯 임베드' },
-];
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 export default function NavLinks() {
   const pathname = usePathname();
+  const { t } = useLocale();
+
+  const links = [
+    { href: '/dashboard', label: t('nav.dashboard') },
+    { href: '/appointments', label: t('nav.appointments') },
+    { href: '/settings', label: t('nav.settings') },
+    { href: '/embed', label: t('nav.embed') },
+  ];
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>

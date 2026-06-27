@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 interface CopyButtonProps {
   text: string;
 }
 
 export function CopyButton({ text }: CopyButtonProps) {
+  const { t } = useLocale();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -38,7 +40,7 @@ export function CopyButton({ text }: CopyButtonProps) {
         transition: 'background 0.2s, color 0.2s',
       }}
     >
-      {copied ? '복사됨 ✓' : '코드 복사'}
+      {copied ? t('embed.copied') : t('embed.copy')}
     </button>
   );
 }

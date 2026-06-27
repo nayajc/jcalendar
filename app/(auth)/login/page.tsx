@@ -6,9 +6,12 @@ import { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { clientAuth } from '@/lib/firebase/client';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useLocale();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -30,12 +33,12 @@ export default function LoginPage() {
       });
 
       if (!res.ok) {
-        throw new Error('세션 생성에 실패했습니다');
+        throw new Error(t('login.sessionFailed'));
       }
 
       router.push('/dashboard');
     } catch (err) {
-      setError(err instanceof Error ? err.message : '이메일 또는 비밀번호가 올바르지 않습니다.');
+      setError(err instanceof Error ? err.message : t('login.invalidCredentials'));
     } finally {
       setLoading(false);
     }
@@ -58,17 +61,17 @@ export default function LoginPage() {
               marginBottom: '6px',
             }}
           >
-            상담사 로그인
+            {t('login.title')}
           </h1>
           <p style={{ fontSize: '14px', color: 'var(--muted)' }}>
-            계정 정보를 입력하여 대시보드에 접속하세요.
+            {t('login.subtitle')}
           </p>
         </div>
 
         <form onSubmit={(e) => void handleSubmit(e)} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
             <label htmlFor="email" className="field-label">
-              이메일
+              {t('login.email')}
             </label>
             <input
               id="email"
@@ -84,7 +87,7 @@ export default function LoginPage() {
 
           <div>
             <label htmlFor="password" className="field-label">
-              비밀번호
+              {t('login.password')}
             </label>
             <input
               id="password"
@@ -110,13 +113,16 @@ export default function LoginPage() {
             className="btn btn-primary"
             style={{ width: '100%', padding: '13px 20px', fontSize: '15px', marginTop: '4px' }}
           >
-            {loading ? '로그인 중...' : '로그인'}
+            {loading ? t('login.signingIn') : t('login.signIn')}
           </button>
         </form>
       </div>
 
-      <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--muted-light)', marginTop: '24px' }}>
-        본 시스템은 등록된 상담사만 접속 가능합니다.
+      <p style={{ textAlign: 'center', fontSize: '13px', color: 'var(--muted)', marginTop: '24px' }}>
+        {t('login.footer')}{' '}
+        <Link href="/signup" style={{ color: 'var(--slate-mid)', fontWeight: 600, textDecoration: 'none' }}>
+          {t('login.signupLink')}
+        </Link>
       </p>
     </div>
   );

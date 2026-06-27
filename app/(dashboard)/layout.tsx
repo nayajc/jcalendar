@@ -3,6 +3,12 @@ import { redirect } from 'next/navigation';
 import { adminAuth } from '@/lib/firebase/admin';
 import LogoutButton from '@/components/dashboard/LogoutButton';
 import NavLinks from '@/components/dashboard/NavLinks';
+import { LocaleToggle } from '@/components/LocaleToggle';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 async function getAuthenticatedUser() {
   const cookieStore = await cookies();
@@ -101,6 +107,7 @@ export default async function DashboardLayout({
             >
               {user.email}
             </span>
+            <LocaleToggle dark />
             <LogoutButton />
           </div>
         </div>

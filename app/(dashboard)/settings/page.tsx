@@ -5,6 +5,7 @@ import { WorkingHoursEditor } from '@/components/dashboard/WorkingHoursEditor';
 import { IntakeQuestionsEditor } from '@/components/dashboard/IntakeQuestionsEditor';
 import type { LawyerSettingsInput } from '@/lib/validators';
 import type { IntakeQuestion } from '@/types';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -20,6 +21,7 @@ const DEFAULT_WORKING_HOURS = Object.fromEntries(
 );
 
 export default function SettingsPage() {
+  const { t } = useLocale();
   const [settings, setSettings] = useState<Partial<LawyerSettingsInput>>({
     name: '',
     slotLength: 60,
@@ -67,10 +69,10 @@ export default function SettingsPage() {
       fd.append('file', file);
       const res = await fetch('/api/lawyers/logo', { method: 'POST', body: fd });
       const data = await res.json() as { url?: string; error?: string };
-      if (!res.ok) throw new Error(data.error ?? '로고 업로드 실패');
+      if (!res.ok) throw new Error(data.error ?? t('settings.logoUploadFailed'));
       setSettings((s) => ({ ...s, embedConfig: { ...s.embedConfig, logoUrl: data.url } }));
     } catch (err) {
-      setLogoError(err instanceof Error ? err.message : '로고 업로드 실패');
+      setLogoError(err instanceof Error ? err.message : t('settings.logoUploadFailed'));
     } finally {
       setLogoUploading(false);
     }
@@ -91,13 +93,13 @@ export default function SettingsPage() {
 
       if (!res.ok) {
         const data = await res.json() as { error?: string };
-        throw new Error(data.error ?? '저장에 실패했습니다');
+        throw new Error(data.error ?? t('settings.saveFailed'));
       }
 
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '저장에 실패했습니다');
+      setError(err instanceof Error ? err.message : t('settings.saveFailed'));
     } finally {
       setLoading(false);
     }
@@ -116,7 +118,7 @@ export default function SettingsPage() {
     <div>
       {/* Page header */}
       <div style={{ marginBottom: '36px' }}>
-        <p className="section-eyebrow">환경설정</p>
+        <p className="section-eyebrow">{t('settings.eyebrow')}</p>
         <h1
           style={{
             fontFamily: 'var(--font-dm-serif), Georgia, serif',
@@ -124,27 +126,27 @@ export default function SettingsPage() {
             color: 'var(--navy)',
           }}
         >
-          설정
+          {t('settings.title')}
         </h1>
       </div>
 
       <form onSubmit={(e) => void handleSave(e)} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         {/* Basic settings */}
         <div className="card">
-          <h2 style={cardHeadingStyle}>기본 설정</h2>
+          <h2 style={cardHeadingStyle}>{t('settings.basic')}</h2>
           <div style={{ marginBottom: '20px' }}>
-            <label className="field-label" htmlFor="lawyer-name">이름</label>
+            <label className="field-label" htmlFor="lawyer-name">{t('settings.name')}</label>
             <input
               id="lawyer-name"
               type="text"
               value={settings.name ?? ''}
               onChange={(e) => setSettings((s) => ({ ...s, name: e.target.value }))}
               className="field-input"
-              placeholder="예: 오수진"
+              placeholder={t('settings.namePlaceholder')}
               required
             />
             <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '4px' }}>
-              예약 이메일과 위젯에 표시됩니다.
+              {t('settings.nameHelper')}
             </p>
           </div>
           <div
@@ -155,7 +157,7 @@ export default function SettingsPage() {
             }}
           >
             <div>
-              <label className="field-label" htmlFor="slot-length">슬롯 길이</label>
+              <label className="field-label" htmlFor="slot-length">{t('settings.slotLength')}</label>
               <select
                 id="slot-length"
                 value={settings.slotLength}
@@ -163,13 +165,13 @@ export default function SettingsPage() {
                 className="field-input"
               >
                 {[30, 45, 60, 90, 120].map((v) => (
-                  <option key={v} value={v}>{v}분</option>
+                  <option key={v} value={v}>{v}{t('settings.minuteSuffix')}</option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="field-label" htmlFor="buffer">슬롯 간 버퍼</label>
+              <label className="field-label" htmlFor="buffer">{t('settings.buffer')}</label>
               <select
                 id="buffer"
                 value={settings.bufferMinutes}
@@ -177,13 +179,13 @@ export default function SettingsPage() {
                 className="field-input"
               >
                 {[0, 10, 15, 30].map((v) => (
-                  <option key={v} value={v}>{v}분</option>
+                  <option key={v} value={v}>{v}{t('settings.minuteSuffix')}</option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="field-label" htmlFor="timezone">타임존</label>
+              <label className="field-label" htmlFor="timezone">{t('settings.timezone')}</label>
               <select
                 id="timezone"
                 value={settings.timezone}
@@ -202,7 +204,7 @@ export default function SettingsPage() {
 
         {/* Working hours */}
         <div className="card">
-          <h2 style={cardHeadingStyle}>업무시간</h2>
+          <h2 style={cardHeadingStyle}>{t('settings.workingHours')}</h2>
           <WorkingHoursEditor
             value={settings.workingHours ?? (DEFAULT_WORKING_HOURS as LawyerSettingsInput['workingHours'])}
             onChange={(wh) => setSettings((s) => ({ ...s, workingHours: wh }))}
@@ -211,11 +213,11 @@ export default function SettingsPage() {
 
         {/* Widget Design */}
         <div className="card">
-          <h2 style={cardHeadingStyle}>위젯 디자인</h2>
+          <h2 style={cardHeadingStyle}>{t('settings.widgetDesign')}</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {/* Primary color */}
             <div>
-              <label className="field-label">주요 색상</label>
+              <label className="field-label">{t('settings.primaryColor')}</label>
               <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <input
                   type="color"
@@ -240,13 +242,13 @@ export default function SettingsPage() {
 
             {/* Logo upload */}
             <div>
-              <label className="field-label">로고 이미지 (선택)</label>
+              <label className="field-label">{t('settings.logo')}</label>
               {settings.embedConfig?.logoUrl && (
                 <div style={{ marginBottom: '10px' }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={settings.embedConfig.logoUrl}
-                    alt="로고 미리보기"
+                    alt={t('settings.logoPreviewAlt')}
                     style={{ maxHeight: '60px', maxWidth: '200px', objectFit: 'contain', border: '1px solid var(--rule)', borderRadius: '6px', padding: '4px' }}
                   />
                 </div>
@@ -259,13 +261,13 @@ export default function SettingsPage() {
                 className="field-input"
                 style={{ cursor: 'pointer' }}
               />
-              {logoUploading && <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '4px' }}>업로드 중...</p>}
+              {logoUploading && <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '4px' }}>{t('settings.uploading')}</p>}
               {logoError && <p style={{ fontSize: '12px', color: '#DC2626', marginTop: '4px' }}>{logoError}</p>}
             </div>
 
             {/* Intro text */}
             <div>
-              <label className="field-label" htmlFor="intro-text">소개 문구 (선택)</label>
+              <label className="field-label" htmlFor="intro-text">{t('settings.introText')}</label>
               <textarea
                 id="intro-text"
                 value={settings.embedConfig?.introText ?? ''}
@@ -275,13 +277,13 @@ export default function SettingsPage() {
                 rows={2}
                 className="field-input"
                 style={{ resize: 'vertical' }}
-                placeholder="위젯 상단에 표시될 소개 문구"
+                placeholder={t('settings.introTextPlaceholder')}
               />
             </div>
 
             {/* Custom message */}
             <div>
-              <label className="field-label" htmlFor="custom-message">안내 문구 (선택)</label>
+              <label className="field-label" htmlFor="custom-message">{t('settings.customMessage')}</label>
               <textarea
                 id="custom-message"
                 value={settings.embedConfig?.customMessage ?? ''}
@@ -291,7 +293,7 @@ export default function SettingsPage() {
                 rows={3}
                 className="field-input"
                 style={{ resize: 'vertical' }}
-                placeholder="위젯 상단에 표시될 안내 메시지를 입력하세요"
+                placeholder={t('settings.customMessagePlaceholder')}
               />
             </div>
           </div>
@@ -299,9 +301,9 @@ export default function SettingsPage() {
 
         {/* Intake questions */}
         <div className="card">
-          <h2 style={cardHeadingStyle}>사전 질문지</h2>
+          <h2 style={cardHeadingStyle}>{t('settings.intakeQuestions')}</h2>
           <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '20px' }}>
-            고객이 예약 시 답해야 할 사전 질문을 설정합니다.
+            {t('settings.intakeQuestionsHelper')}
           </p>
           <IntakeQuestionsEditor
             value={(settings.intakeQuestions as IntakeQuestion[]) ?? []}
@@ -319,13 +321,13 @@ export default function SettingsPage() {
               marginBottom: '8px',
             }}
           >
-            Google Calendar 연동
+            {t('settings.googleCalendar')}
           </h2>
           <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '20px' }}>
-            Google Calendar를 연결하면 바쁜 시간이 자동으로 제외됩니다.
+            {t('settings.googleCalendarHelper')}
           </p>
           <a href="/settings/google-calendar" className="btn btn-secondary">
-            Google Calendar 연결 관리
+            {t('settings.googleCalendarManage')}
           </a>
         </div>
 
@@ -337,7 +339,7 @@ export default function SettingsPage() {
         )}
         {saved && (
           <div className="alert alert-success" role="status">
-            설정이 저장되었습니다.
+            {t('settings.saved')}
           </div>
         )}
 
@@ -349,7 +351,7 @@ export default function SettingsPage() {
             className="btn btn-primary"
             style={{ padding: '12px 32px', fontSize: '15px' }}
           >
-            {loading ? '저장 중...' : '설정 저장'}
+            {loading ? t('settings.saving') : t('settings.save')}
           </button>
         </div>
       </form>

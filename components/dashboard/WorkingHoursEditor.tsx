@@ -1,8 +1,18 @@
 'use client';
 
 import type { LawyerSettingsInput } from '@/lib/validators';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
+import type { TranslationKey } from '@/lib/i18n/translations';
 
-const DAYS = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+const DAY_KEYS: TranslationKey[] = [
+  'workingHours.sun',
+  'workingHours.mon',
+  'workingHours.tue',
+  'workingHours.wed',
+  'workingHours.thu',
+  'workingHours.fri',
+  'workingHours.sat',
+];
 
 type WorkingHours = LawyerSettingsInput['workingHours'];
 
@@ -12,6 +22,8 @@ interface WorkingHoursEditorProps {
 }
 
 export function WorkingHoursEditor({ value, onChange }: WorkingHoursEditorProps) {
+  const { t } = useLocale();
+  const DAYS = DAY_KEYS.map((k) => t(k));
   function updateDay(dayIndex: number, field: string, fieldValue: boolean | string) {
     onChange({
       ...value,
@@ -85,7 +97,7 @@ export function WorkingHoursEditor({ value, onChange }: WorkingHoursEditorProps)
                 />
               </div>
             ) : (
-              <span style={{ fontSize: '13px', color: 'var(--muted-light)' }}>휴무</span>
+              <span style={{ fontSize: '13px', color: 'var(--muted-light)' }}>{t('workingHours.off')}</span>
             )}
           </div>
         );

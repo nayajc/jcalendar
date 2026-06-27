@@ -2,17 +2,20 @@
 
 import { useState } from 'react';
 import type { Appointment } from '@/types';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
+import type { TranslationKey } from '@/lib/i18n/translations';
 
 interface AppointmentListProps {
   appointments: Appointment[];
   lawyerTimezone: string;
 }
 
-function formatSlot(appointment: Appointment, timezone: string): string {
+function formatSlot(appointment: Appointment, timezone: string, locale: string): string {
   const start = appointment.slotStart.toDate();
   const end = appointment.slotEnd.toDate();
+  const intlLocale = locale === 'en' ? 'en-US' : 'ko-KR';
 
-  const fmt = new Intl.DateTimeFormat('ko-KR', {
+  const fmt = new Intl.DateTimeFormat(intlLocale, {
     timeZone: timezone,
     year: 'numeric',
     month: '2-digit',
@@ -22,7 +25,7 @@ function formatSlot(appointment: Appointment, timezone: string): string {
     hour12: false,
   });
 
-  return `${fmt.format(start)} ~ ${new Intl.DateTimeFormat('ko-KR', {
+  return `${fmt.format(start)} ~ ${new Intl.DateTimeFormat(intlLocale, {
     timeZone: timezone,
     hour: '2-digit',
     minute: '2-digit',
@@ -30,12 +33,12 @@ function formatSlot(appointment: Appointment, timezone: string): string {
   }).format(end)}`;
 }
 
-const STATUS_LABEL: Record<string, string> = {
-  pending: '대기중',
-  confirmed: '확정',
-  rejected: '거절',
-  expired: '만료',
-  cancelled: '취소',
+const STATUS_KEY: Record<string, TranslationKey> = {
+  pending: 'status.pending',
+  confirmed: 'status.confirmed',
+  rejected: 'status.rejected',
+  expired: 'status.expired',
+  cancelled: 'status.cancelled',
 };
 
 const STATUS_CLASS: Record<string, string> = {
@@ -47,6 +50,7 @@ const STATUS_CLASS: Record<string, string> = {
 };
 
 export default function AppointmentList({ appointments, lawyerTimezone }: AppointmentListProps) {
+  const { t, locale } = useLocale();
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -59,11 +63,11 @@ export default function AppointmentList({ appointments, lawyerTimezone }: Appoin
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error((data as { error?: string }).error ?? `${action} 실패`);
+        throw new Error((data as { error?: string }).error ?? `${action} ${t('apptList.actionFailedSuffix')}`);
       }
       window.location.reload();
     } catch (err) {
-      setError(err instanceof Error ? err.message : '오류가 발생했습니다');
+      setError(err instanceof Error ? err.message : t('apptList.genericError'));
     } finally {
       setLoading(null);
     }
@@ -82,7 +86,7 @@ export default function AppointmentList({ appointments, lawyerTimezone }: Appoin
           fontSize: '14px',
         }}
       >
-        해당 상태의 예약이 없습니다.
+        {t('apptList.empty')}
       </div>
     );
   }
@@ -119,7 +123,7 @@ export default function AppointmentList({ appointments, lawyerTimezone }: Appoin
               {/* Top row: badge + name */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px', flexWrap: 'wrap' }}>
                 <span className={STATUS_CLASS[appt.status] ?? 'badge'}>
-                  {STATUS_LABEL[appt.status] ?? appt.status}
+                  {STATUS_KEY[appt.status] ? t(STATUS_KEY[appt.status]!) : appt.status}
                 </span>
                 <span style={{ fontSize: '15px', fontWeight: 600, color: 'var(--ink)' }}>
                   {appt.client.name}
@@ -136,7 +140,7 @@ export default function AppointmentList({ appointments, lawyerTimezone }: Appoin
                   marginBottom: '4px',
                 }}
               >
-                {formatSlot(appt, lawyerTimezone)}
+                {formatSlot(appt, lawyerTimezone, locale)}
               </p>
 
               {/* Contact */}
@@ -175,7 +179,7 @@ export default function AppointmentList({ appointments, lawyerTimezone }: Appoin
                   }}
                 >
                   <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>
-                    사전 질문 답변
+                    {t('apptList.intakeAnswers')}
                   </p>
                   {appt.intakeAnswers.map((ans) => (
                     <div key={ans.questionId} style={{ marginBottom: '6px' }}>
@@ -198,7 +202,7 @@ export default function AppointmentList({ appointments, lawyerTimezone }: Appoin
                   }}
                 >
                   <p style={{ fontSize: '11px', fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '6px' }}>
-                    첨부파일
+                    {t('apptList.attachments')}
                   </p>
                   {appt.attachments.map((att, i) => (
                     <div key={i} style={{ marginBottom: '4px' }}>
@@ -234,7 +238,7 @@ export default function AppointmentList({ appointments, lawyerTimezone }: Appoin
                       fontWeight: 700,
                     }}
                   >
-                    {loading === `${appt.id}-confirm` ? '처리중...' : '승인'}
+                    {loading === `${appt.id}-confirm` ? t('apptList.processing') : t('apptList.confirm')}
                   </button>
                   <button
                     onClick={() => void callAction(appt.id, 'reject')}
@@ -247,7 +251,7 @@ export default function AppointmentList({ appointments, lawyerTimezone }: Appoin
                       fontWeight: 700,
                     }}
                   >
-                    {loading === `${appt.id}-reject` ? '처리중...' : '거절'}
+                    {loading === `${appt.id}-reject` ? t('apptList.processing') : t('apptList.reject')}
                   </button>
                 </>
               )}
@@ -258,7 +262,7 @@ export default function AppointmentList({ appointments, lawyerTimezone }: Appoin
                   className="btn btn-sm btn-ghost"
                   style={{ color: 'var(--muted)', border: '1px solid var(--rule)' }}
                 >
-                  {loading === `${appt.id}-cancel` ? '처리중...' : '취소'}
+                  {loading === `${appt.id}-cancel` ? t('apptList.processing') : t('apptList.cancel')}
                 </button>
               )}
             </div>

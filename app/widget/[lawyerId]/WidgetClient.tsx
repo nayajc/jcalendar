@@ -5,6 +5,8 @@ import { SlotPicker } from '@/components/widget/SlotPicker';
 import { BookingForm } from '@/components/widget/BookingForm';
 import { ConfirmationView } from '@/components/widget/ConfirmationView';
 import type { AvailabilitySlot, EmbedConfig, IntakeQuestion } from '@/types';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
+import { LocaleToggle } from '@/components/LocaleToggle';
 
 type Step = 'pick' | 'form' | 'done';
 
@@ -15,18 +17,18 @@ interface WidgetClientProps {
   intakeQuestions: IntakeQuestion[];
 }
 
-const STEPS = [
-  { key: 'pick', label: '일정 선택' },
-  { key: 'form', label: '정보 입력' },
-  { key: 'done', label: '완료' },
-];
-
 export function WidgetClient({
   lawyerId,
   lawyerName,
   embedConfig,
   intakeQuestions,
 }: WidgetClientProps) {
+  const { t } = useLocale();
+  const STEPS = [
+    { key: 'pick', label: t('widget.stepPick') },
+    { key: 'form', label: t('widget.stepForm') },
+    { key: 'done', label: t('widget.stepDone') },
+  ];
   const [step, setStep] = useState<Step>('pick');
   const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlot | null>(null);
   const [appointmentId, setAppointmentId] = useState('');
@@ -58,6 +60,11 @@ export function WidgetClient({
         boxSizing: 'border-box',
       }}
     >
+      {/* Language toggle */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '8px' }}>
+        <LocaleToggle />
+      </div>
+
       {/* Header */}
       <div
         style={{
@@ -71,7 +78,7 @@ export function WidgetClient({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={logoUrl}
-            alt="로고"
+            alt={t('widget.logoAlt')}
             style={{ maxHeight: '48px', maxWidth: '160px', objectFit: 'contain', marginBottom: '12px', display: 'block' }}
           />
         )}
@@ -98,7 +105,7 @@ export function WidgetClient({
                 color: '#64748B',
               }}
             >
-              전문 상담 예약
+              {t('widget.brandFallback')}
             </span>
           </div>
         )}
@@ -121,7 +128,7 @@ export function WidgetClient({
           {lawyerName}
         </h1>
         <p style={{ margin: '6px 0 0', fontSize: '14px', color: '#64748B', lineHeight: 1.5 }}>
-          {customMessage ?? '상담 예약을 신청해주세요. 확정 시 이메일로 안내드립니다.'}
+          {customMessage ?? t('widget.defaultMessage')}
         </p>
       </div>
 
@@ -221,7 +228,7 @@ export function WidgetClient({
           lineHeight: 1.6,
         }}
       >
-        표시 시각은 브라우저 현지 시각({Intl.DateTimeFormat().resolvedOptions().timeZone}) 기준입니다.
+        {t('widget.footerTimezone')}({Intl.DateTimeFormat().resolvedOptions().timeZone}) {t('widget.footerTimezoneSuffix')}
       </div>
     </div>
   );

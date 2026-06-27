@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { DM_Serif_Display, Noto_Sans_KR } from 'next/font/google';
 import './globals.css';
 import SwRegister from './sw-register';
+import { LocaleProvider } from '@/lib/i18n/LocaleProvider';
 
 const dmSerif = DM_Serif_Display({
   weight: '400',
@@ -17,13 +18,29 @@ const notoSans = Noto_Sans_KR({
   display: 'swap',
 });
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://your-domain.com';
+
 export const metadata: Metadata = {
-  title: '전문 상담 예약 관리',
-  description: '상담사 예약 캘린더 SaaS',
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: 'Jolly Calendar — 상담 예약 자동화 캘린더',
+    template: '%s · Jolly Calendar',
+  },
+  description: 'Google Calendar와 연동되는 상담 예약 캘린더 SaaS. 이중예약 방지와 자동 리마인더로 상담사의 일정 관리를 자동화합니다.',
+  applicationName: 'Jolly Calendar',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'Jolly Calendar',
+  },
+  robots: {
+    index: false,
+    follow: false,
+  },
+  openGraph: {
+    siteName: 'Jolly Calendar',
+    locale: 'ko_KR',
+    type: 'website',
   },
 };
 
@@ -41,8 +58,10 @@ export default function RootLayout({
   return (
     <html lang="ko" className={`${dmSerif.variable} ${notoSans.variable}`} suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <SwRegister />
-        {children}
+        <LocaleProvider>
+          <SwRegister />
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   );

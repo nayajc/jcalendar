@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { adminAuth, adminDb } from '@/lib/firebase/admin';
 import { appointmentConverter, lawyerConverter } from '@/lib/firebase/converters';
-import AppointmentList from '@/components/dashboard/AppointmentList';
+import { AppointmentsView } from '@/components/dashboard/AppointmentsView';
 import type { Appointment } from '@/types';
 
 async function getAuthenticatedLawyerId(): Promise<string> {
@@ -51,64 +51,10 @@ export default async function AppointmentsPage() {
   const confirmedAppointments: Appointment[] = confirmedSnap.docs.map((d) => d.data());
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
-      {/* Page header */}
-      <div>
-        <p className="section-eyebrow">관리</p>
-        <h1
-          style={{
-            fontFamily: 'var(--font-dm-serif), Georgia, serif',
-            fontSize: '32px',
-            color: 'var(--navy)',
-          }}
-        >
-          예약 관리
-        </h1>
-      </div>
-
-      {/* Pending */}
-      <section>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '16px' }}>
-          <h2
-            style={{
-              fontFamily: 'var(--font-dm-serif), Georgia, serif',
-              fontSize: '22px',
-              color: 'var(--navy)',
-            }}
-          >
-            대기중 예약
-          </h2>
-          <span className="badge badge-pending">
-            {pendingAppointments.length}건
-          </span>
-        </div>
-        <AppointmentList
-          appointments={pendingAppointments}
-          lawyerTimezone={lawyerTimezone}
-        />
-      </section>
-
-      {/* Confirmed */}
-      <section>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: '10px', marginBottom: '16px' }}>
-          <h2
-            style={{
-              fontFamily: 'var(--font-dm-serif), Georgia, serif',
-              fontSize: '22px',
-              color: 'var(--navy)',
-            }}
-          >
-            확정 예약
-          </h2>
-          <span className="badge badge-confirmed">
-            {confirmedAppointments.length}건
-          </span>
-        </div>
-        <AppointmentList
-          appointments={confirmedAppointments}
-          lawyerTimezone={lawyerTimezone}
-        />
-      </section>
-    </div>
+    <AppointmentsView
+      pendingAppointments={pendingAppointments}
+      confirmedAppointments={confirmedAppointments}
+      lawyerTimezone={lawyerTimezone}
+    />
   );
 }

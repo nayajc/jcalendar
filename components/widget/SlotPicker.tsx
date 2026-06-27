@@ -15,6 +15,7 @@ import {
   subMonths,
 } from 'date-fns';
 import type { AvailabilitySlot } from '@/types';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 interface SlotPickerProps {
   lawyerId: string;
@@ -30,8 +31,8 @@ function formatSlotTime(isoString: string): string {
   }).format(new Date(isoString));
 }
 
-function formatDateLabel(isoString: string): string {
-  return new Intl.DateTimeFormat(undefined, {
+function formatDateLabel(isoString: string, intlLocale: string): string {
+  return new Intl.DateTimeFormat(intlLocale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -46,9 +47,13 @@ function toLocalDateString(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
-const WEEKDAY_LABELS = ['일', '월', '화', '수', '목', '금', '토'];
+const WEEKDAY_LABELS_KO = ['일', '월', '화', '수', '목', '금', '토'];
+const WEEKDAY_LABELS_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 export function SlotPicker({ lawyerId, primaryColor = '#1A3050', onSlotSelected }: SlotPickerProps) {
+  const { t, locale } = useLocale();
+  const intlLocale = locale === 'en' ? 'en-US' : 'ko-KR';
+  const WEEKDAY_LABELS = locale === 'en' ? WEEKDAY_LABELS_EN : WEEKDAY_LABELS_KO;
   const today = startOfDay(new Date());
   const [selectedDate, setSelectedDate] = useState<string>(toLocalDateString(today));
   const [visibleMonth, setVisibleMonth] = useState<Date>(startOfMonth(today));
@@ -71,17 +76,17 @@ export function SlotPicker({ lawyerId, primaryColor = '#1A3050', onSlotSelected 
         const res = await fetch(`/api/availability/${lawyerId}?${params.toString()}`);
         if (!res.ok) {
           const body = (await res.json()) as { error?: string };
-          throw new Error(body.error ?? '슬롯 조회 실패');
+          throw new Error(body.error ?? t('slot.loadFailed'));
         }
         const data = (await res.json()) as { slots: AvailabilitySlot[] };
         setSlots(data.slots);
       } catch (e) {
-        setError(e instanceof Error ? e.message : '슬롯을 불러오는 중 오류가 발생했습니다.');
+        setError(e instanceof Error ? e.message : t('slot.loadError'));
       } finally {
         setLoading(false);
       }
     },
-    [lawyerId, clientTimezone]
+    [lawyerId, clientTimezone, t]
   );
 
   const handleDayClick = (day: Date) => {
@@ -129,7 +134,7 @@ export function SlotPicker({ lawyerId, primaryColor = '#1A3050', onSlotSelected 
             marginBottom: '10px',
           }}
         >
-          날짜 선택
+          {t('slot.selectDate')}
         </label>
 
         {/* Month nav */}
@@ -145,7 +150,7 @@ export function SlotPicker({ lawyerId, primaryColor = '#1A3050', onSlotSelected 
             type="button"
             onClick={() => setVisibleMonth((m) => subMonths(m, 1))}
             disabled={isSameMonth(visibleMonth, today)}
-            aria-label="이전 달"
+            aria-label={t('slot.prevMonth')}
             style={{
               border: '1px solid #C8D3E3',
               background: '#fff',
@@ -161,12 +166,12 @@ export function SlotPicker({ lawyerId, primaryColor = '#1A3050', onSlotSelected 
             ‹
           </button>
           <span style={{ fontSize: '14px', fontWeight: 700, color: '#0F1923' }}>
-            {format(visibleMonth, 'yyyy년 M월')}
+            {locale === 'en' ? format(visibleMonth, 'MMMM yyyy') : format(visibleMonth, 'yyyy년 M월')}
           </span>
           <button
             type="button"
             onClick={() => setVisibleMonth((m) => addMonths(m, 1))}
-            aria-label="다음 달"
+            aria-label={t('slot.nextMonth')}
             style={{
               border: '1px solid #C8D3E3',
               background: '#fff',
@@ -278,7 +283,7 @@ export function SlotPicker({ lawyerId, primaryColor = '#1A3050', onSlotSelected 
             }}
           />
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-          <p style={{ marginTop: '10px', fontSize: '13px' }}>가용 시간을 불러오는 중...</p>
+          <p style={{ marginTop: '10px', fontSize: '13px' }}>{t('slot.loading')}</p>
         </div>
       )}
 
@@ -311,10 +316,10 @@ export function SlotPicker({ lawyerId, primaryColor = '#1A3050', onSlotSelected 
             borderRadius: '8px',
           }}
         >
-          선택한 날짜에 가용 시간이 없습니다.
+          {t('slot.noSlots')}
           <br />
           <span style={{ fontSize: '12px', color: '#94A3B8', marginTop: '4px', display: 'block' }}>
-            다른 날짜를 선택해보세요.
+            {t('slot.tryAnotherDate')}
           </span>
         </div>
       )}
@@ -330,10 +335,10 @@ export function SlotPicker({ lawyerId, primaryColor = '#1A3050', onSlotSelected 
               marginBottom: '12px',
             }}
           >
-            {formatDateLabel(slots[0]!.start)}
+            {formatDateLabel(slots[0]!.start, intlLocale)}
           </p>
           <p style={{ fontSize: '12px', color: '#94A3B8', marginBottom: '16px' }}>
-            현지 시각({clientTimezone}) 기준 · {slots.length}개 가용 슬롯
+            {t('slot.localTimeBasis')}({clientTimezone}) {t('slot.basisSuffix')} · {slots.length}{t('slot.availableSlotsSuffix')}
           </p>
           <div
             style={{

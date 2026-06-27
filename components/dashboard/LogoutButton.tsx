@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 export default function LogoutButton() {
+  const { t } = useLocale();
   const [loading, setLoading] = useState(false);
 
   async function handleLogout() {
@@ -43,7 +45,7 @@ export default function LogoutButton() {
         (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(255,255,255,0.25)';
       }}
     >
-      {loading ? '로그아웃 중...' : '로그아웃'}
+      {loading ? t('nav.loggingOut') : t('nav.logout')}
     </button>
   );
 }

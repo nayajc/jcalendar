@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import type { AvailabilitySlot, IntakeQuestion } from '@/types';
 import type { CreateAppointmentInput } from '@/lib/validators';
 import { UPLOAD_MAX_FILE_SIZE, UPLOAD_MAX_FILES, UPLOAD_ALLOWED_MIME_TYPES } from '@/lib/validators';
+import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 interface BookingFormProps {
   lawyerId: string;
@@ -72,6 +73,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 }
 
 export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', intakeQuestions = [], onSuccess, onBack }: BookingFormProps) {
+  const { t } = useLocale();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -123,16 +125,16 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', intakeQu
     setFileError('');
     const selected = Array.from(e.target.files ?? []);
     if (selected.length > UPLOAD_MAX_FILES) {
-      setFileError(`파일은 최대 ${UPLOAD_MAX_FILES}개까지 첨부할 수 있습니다.`);
+      setFileError(`${t('booking.maxFilesError')} ${UPLOAD_MAX_FILES}${t('booking.maxFilesErrorSuffix')}`);
       return;
     }
     for (const f of selected) {
       if (f.size > UPLOAD_MAX_FILE_SIZE) {
-        setFileError(`파일 크기는 ${UPLOAD_MAX_FILE_SIZE / 1024 / 1024}MB 이하여야 합니다. (${f.name})`);
+        setFileError(`${t('booking.maxSizeError')} ${UPLOAD_MAX_FILE_SIZE / 1024 / 1024}${t('booking.maxSizeErrorSuffix')} (${f.name})`);
         return;
       }
       if (!allowedTypes.includes(f.type)) {
-        setFileError(`허용되지 않는 파일 형식입니다. (${f.name})`);
+        setFileError(`${t('booking.invalidTypeError')} (${f.name})`);
         return;
       }
     }
@@ -140,14 +142,14 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', intakeQu
   };
 
   const validate = (): string | null => {
-    if (!name.trim()) return '이름을 입력해주세요.';
-    if (!phone.trim()) return '전화번호를 입력해주세요.';
-    if (!email.trim() || !email.includes('@')) return '유효한 이메일 주소를 입력해주세요.';
-    if (inquiry.trim().length < 10) return '문의 내용은 최소 10자 이상 입력해주세요.';
-    if (siteKey && !captchaToken) return 'hCaptcha를 완료해주세요.';
+    if (!name.trim()) return t('booking.validateName');
+    if (!phone.trim()) return t('booking.validatePhone');
+    if (!email.trim() || !email.includes('@')) return t('booking.validateEmail');
+    if (inquiry.trim().length < 10) return t('booking.validateInquiry');
+    if (siteKey && !captchaToken) return t('booking.validateCaptcha');
     for (const q of intakeQuestions) {
       if (q.required && !intakeAnswers[q.id]?.trim()) {
-        return `"${q.label}" 항목은 필수입니다.`;
+        return `"${q.label}" ${t('booking.validateIntakeRequired')}`;
       }
     }
     return null;
@@ -176,13 +178,13 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', intakeQu
             const res = await fetch('/api/upload', { method: 'POST', body: fd });
             if (!res.ok) {
               const body = await res.json() as { error?: string };
-              throw new Error(body.error ?? '파일 업로드 실패');
+              throw new Error(body.error ?? t('booking.uploadFailed'));
             }
             return res.json() as Promise<{ name: string; url: string; size: number; contentType: string }>;
           })
         );
       } catch (err) {
-        setErrorMsg(err instanceof Error ? err.message : '파일 업로드 중 오류가 발생했습니다.');
+        setErrorMsg(err instanceof Error ? err.message : t('booking.uploadError'));
         setSubmitState('error');
         return;
       }
@@ -216,12 +218,12 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', intakeQu
       const body = (await res.json()) as { appointmentId?: string; error?: string };
 
       if (!res.ok) {
-        throw new Error(body.error ?? '예약 생성에 실패했습니다.');
+        throw new Error(body.error ?? t('booking.createFailed'));
       }
 
       onSuccess(body.appointmentId ?? '');
     } catch (err) {
-      setErrorMsg(err instanceof Error ? err.message : '예약 중 오류가 발생했습니다.');
+      setErrorMsg(err instanceof Error ? err.message : t('booking.bookingError'));
       setSubmitState('error');
 
       if (window.hcaptcha && captchaWidgetId.current) {
@@ -259,7 +261,7 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', intakeQu
           fontFamily: 'inherit',
         }}
       >
-        ← 날짜 다시 선택
+        {t('booking.back')}
       </button>
 
       {/* Selected slot summary */}
@@ -279,28 +281,28 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', intakeQu
       >
         {formatSlotDisplay(slot.start, slot.end)}
         <div style={{ fontSize: '12px', color: '#64748B', fontWeight: 400, marginTop: '2px' }}>
-          {clientTimezone} 기준
+          {clientTimezone} {t('booking.timezoneSuffix')}
         </div>
       </div>
 
       <form onSubmit={(e) => void handleSubmit(e)}>
-        <Field label="이름 *">
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="홍길동" style={fieldStyle} required onFocus={focusStyle} onBlur={blurStyle} />
+        <Field label={t('booking.name')}>
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder={t('booking.namePlaceholder')} style={fieldStyle} required onFocus={focusStyle} onBlur={blurStyle} />
         </Field>
 
-        <Field label="전화번호 *">
-          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="010-0000-0000" style={fieldStyle} required onFocus={focusStyle} onBlur={blurStyle} />
+        <Field label={t('booking.phone')}>
+          <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder={t('booking.phonePlaceholder')} style={fieldStyle} required onFocus={focusStyle} onBlur={blurStyle} />
         </Field>
 
-        <Field label="이메일 *">
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="example@email.com" style={fieldStyle} required onFocus={focusStyle} onBlur={blurStyle} />
+        <Field label={t('booking.email')}>
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder={t('booking.emailPlaceholder')} style={fieldStyle} required onFocus={focusStyle} onBlur={blurStyle} />
         </Field>
 
-        <Field label={`문의 내용 * (최소 10자)`}>
+        <Field label={t('booking.inquiry')}>
           <textarea
             value={inquiry}
             onChange={(e) => setInquiry(e.target.value)}
-            placeholder="상담받고 싶은 내용을 자세히 작성해주세요."
+            placeholder={t('booking.inquiryPlaceholder')}
             rows={5}
             style={{ ...fieldStyle, resize: 'vertical' }}
             required
@@ -329,7 +331,7 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', intakeQu
                 borderBottom: '1px solid #E8EDF4',
               }}
             >
-              사전 질문
+              {t('booking.intakeQuestions')}
             </div>
             {intakeQuestions.map((q) => (
               <Field key={q.id} label={`${q.label}${q.required ? ' *' : ''}`}>
@@ -349,7 +351,7 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', intakeQu
 
         {/* File attachments */}
         <div style={{ marginBottom: '20px' }}>
-          <label style={labelStyle}>첨부파일 (선택, 최대 {UPLOAD_MAX_FILES}개)</label>
+          <label style={labelStyle}>{t('booking.attachmentsLabel')} {UPLOAD_MAX_FILES}{t('booking.attachmentsLabelSuffix')}</label>
           <input
             type="file"
             multiple
@@ -368,7 +370,7 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', intakeQu
             </ul>
           )}
           <p style={{ fontSize: '11px', color: '#94A3B8', marginTop: '4px' }}>
-            허용 형식: PDF, PNG, JPG, WEBP, DOC, DOCX, HWP · 파일당 최대 {UPLOAD_MAX_FILE_SIZE / 1024 / 1024}MB
+            {t('booking.allowedFormats')} {UPLOAD_MAX_FILE_SIZE / 1024 / 1024}MB
           </p>
         </div>
 
@@ -415,7 +417,7 @@ export function BookingForm({ lawyerId, slot, primaryColor = '#1A3050', intakeQu
             letterSpacing: '0.01em',
           }}
         >
-          {submitState === 'submitting' ? '예약 접수 중...' : '예약 신청하기'}
+          {submitState === 'submitting' ? t('booking.submitting') : t('booking.submit')}
         </button>
       </form>
     </div>

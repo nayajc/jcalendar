@@ -1,11 +1,14 @@
 'use client';
 
+import { useLocale } from '@/lib/i18n/LocaleProvider';
+
 interface ConfirmationViewProps {
   appointmentId: string;
   primaryColor?: string;
 }
 
 export function ConfirmationView({ appointmentId, primaryColor = '#1A3050' }: ConfirmationViewProps) {
+  const { t } = useLocale();
   return (
     <div
       style={{
@@ -41,12 +44,10 @@ export function ConfirmationView({ appointmentId, primaryColor = '#1A3050' }: Co
           lineHeight: 1.3,
         }}
       >
-        예약 신청이 완료되었습니다
+        {t('confirm.title')}
       </h2>
-      <p style={{ color: '#64748B', fontSize: '14px', margin: '0 0 8px', lineHeight: 1.7 }}>
-        담당 상담사가 검토 후 확정 이메일을 발송합니다.
-        <br />
-        통상 영업일 기준 1일 이내 처리됩니다.
+      <p style={{ color: '#64748B', fontSize: '14px', margin: '0 0 8px', lineHeight: 1.7, whiteSpace: 'pre-line' }}>
+        {t('confirm.body')}
       </p>
 
       {/* Appointment ID */}
@@ -64,7 +65,7 @@ export function ConfirmationView({ appointmentId, primaryColor = '#1A3050' }: Co
         }}
       >
         <span style={{ display: 'block', fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '2px' }}>
-          예약 번호
+          {t('confirm.idLabel')}
         </span>
         <span
           style={{
@@ -90,9 +91,8 @@ export function ConfirmationView({ appointmentId, primaryColor = '#1A3050' }: Co
           textAlign: 'left',
         }}
       >
-        <strong style={{ display: 'block', marginBottom: '4px', color: '#1A3050' }}>안내사항</strong>
-        확정 이메일 수신 후 예약이 유효합니다. 부득이하게 취소가 필요할 경우,
-        이메일로 담당 상담사에게 연락 바랍니다.
+        <strong style={{ display: 'block', marginBottom: '4px', color: '#1A3050' }}>{t('confirm.noticeTitle')}</strong>
+        {t('confirm.noticeBody')}
       </div>
     </div>
   );
