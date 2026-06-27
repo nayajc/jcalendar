@@ -26,10 +26,14 @@ export default async function DashboardPage() {
     .limit(10)
     .get();
 
-  const appointments = appointmentsSnap.docs.map((doc) => ({
-    id: doc.id,
-    ...(doc.data() as { status?: string; client?: { name?: string }; slotStart?: { toDate: () => Date } }),
-  }));
+  const appointments = appointmentsSnap.docs.map((doc) => {
+    const data = doc.data() as { status?: string; client?: { name?: string } };
+    return {
+      id: doc.id,
+      status: data.status,
+      client: data.client ? { name: data.client.name } : undefined,
+    };
+  });
 
   const pending = appointments.filter((a) => a.status === 'pending').length;
   const confirmed = appointments.filter((a) => a.status === 'confirmed').length;
