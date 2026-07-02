@@ -138,6 +138,16 @@ export const translations = {
   'workingHours.sat': { ko: '토요일', en: 'Saturday' },
   'workingHours.off': { ko: '휴무', en: 'Closed' },
 
+  // blocked periods
+  'settings.blockedPeriods': { ko: '예약 차단 기간', en: 'Blocked periods' },
+  'settings.blockedPeriodsHelper': { ko: '휴가, 공휴일 등 예약을 받지 않을 기간을 설정합니다. 해당 기간에는 슬롯이 노출되지 않습니다.', en: 'Set periods when you are unavailable (vacation, holidays, etc.). No slots will be shown during these dates.' },
+  'blocked.empty': { ko: '등록된 차단 기간이 없습니다.', en: 'No blocked periods yet.' },
+  'blocked.labelPlaceholder': { ko: '메모 (예: 여름 휴가)', en: 'Note (e.g. Summer vacation)' },
+  'blocked.startDate': { ko: '시작일', en: 'Start date' },
+  'blocked.endDate': { ko: '종료일', en: 'End date' },
+  'blocked.deleteAria': { ko: '차단 기간 삭제', en: 'Delete blocked period' },
+  'blocked.add': { ko: '+ 차단 기간 추가', en: '+ Add blocked period' },
+
   // intake questions editor
   'intake.empty': { ko: '아직 등록된 사전 질문이 없습니다.', en: 'No pre-screening questions yet.' },
   'intake.placeholder': { ko: '질문 내용을 입력하세요', en: 'Enter the question' },

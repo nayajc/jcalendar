@@ -62,6 +62,14 @@ export const lawyerSettingsSchema = z.object({
       required: z.boolean(),
     })
   ).optional(),
+  blockedPeriods: z.array(
+    z.object({
+      id: z.string().min(1),
+      startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'YYYY-MM-DD 형식이어야 합니다'),
+      endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'YYYY-MM-DD 형식이어야 합니다'),
+      label: z.string().max(100).optional(),
+    })
+  ).optional(),
 });
 
 export type LawyerSettingsInput = z.infer<typeof lawyerSettingsSchema>;

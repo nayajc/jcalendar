@@ -49,7 +49,17 @@ export async function computeAvailableSlots(
   };
   const dayOfWeek = weekdayPart ? (WEEKDAY_MAP[weekdayPart] ?? -1) : -1;
 
-  // 2. 업무시간 설정 확인
+  // 2-a. 차단 기간 확인 (변호사 timezone 기준 날짜)
+  if (lawyer.blockedPeriods && lawyer.blockedPeriods.length > 0) {
+    const dateStr = new Intl.DateTimeFormat('en-CA', { timeZone: lawyer.timezone })
+      .format(targetDate); // YYYY-MM-DD
+    const isBlocked = lawyer.blockedPeriods.some(
+      (p) => dateStr >= p.startDate && dateStr <= p.endDate
+    );
+    if (isBlocked) return [];
+  }
+
+  // 2-b. 업무시간 설정 확인
   const dayConfig = lawyer.workingHours[dayOfWeek];
   if (!dayConfig || !dayConfig.enabled) {
     return [];

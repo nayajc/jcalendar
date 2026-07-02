@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import { WorkingHoursEditor } from '@/components/dashboard/WorkingHoursEditor';
 import { IntakeQuestionsEditor } from '@/components/dashboard/IntakeQuestionsEditor';
+import { BlockedPeriodsEditor } from '@/components/dashboard/BlockedPeriodsEditor';
 import type { LawyerSettingsInput } from '@/lib/validators';
-import type { IntakeQuestion } from '@/types';
+import type { IntakeQuestion, BlockedPeriod } from '@/types';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
 
 const DAYS = ['일', '월', '화', '수', '목', '금', '토'];
@@ -30,6 +31,7 @@ export default function SettingsPage() {
     workingHours: DEFAULT_WORKING_HOURS as LawyerSettingsInput['workingHours'],
     embedConfig: {},
     intakeQuestions: [],
+    blockedPeriods: [],
   });
   const [loading, setLoading] = useState(false);
 
@@ -47,6 +49,7 @@ export default function SettingsPage() {
             embedConfig: { ...s.embedConfig, ...(json.data?.embedConfig ?? {}) },
             workingHours: json.data?.workingHours ?? s.workingHours,
             intakeQuestions: json.data?.intakeQuestions ?? s.intakeQuestions,
+            blockedPeriods: json.data?.blockedPeriods ?? s.blockedPeriods,
           }));
         }
       } catch {
@@ -297,6 +300,18 @@ export default function SettingsPage() {
               />
             </div>
           </div>
+        </div>
+
+        {/* Blocked periods */}
+        <div className="card">
+          <h2 style={cardHeadingStyle}>{t('settings.blockedPeriods')}</h2>
+          <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '20px' }}>
+            {t('settings.blockedPeriodsHelper')}
+          </p>
+          <BlockedPeriodsEditor
+            value={(settings.blockedPeriods as BlockedPeriod[]) ?? []}
+            onChange={(periods) => setSettings((s) => ({ ...s, blockedPeriods: periods }))}
+          />
         </div>
 
         {/* Intake questions */}

@@ -29,6 +29,13 @@ export interface IntakeQuestion {
   required: boolean;
 }
 
+export interface BlockedPeriod {
+  id: string;
+  startDate: string; // YYYY-MM-DD
+  endDate: string;   // YYYY-MM-DD (inclusive)
+  label?: string;
+}
+
 export interface Lawyer {
   id: string;
   name: string;
@@ -40,6 +47,7 @@ export interface Lawyer {
   googleCalendar?: GoogleCalendarConfig;
   embedConfig: EmbedConfig;
   intakeQuestions?: IntakeQuestion[];
+  blockedPeriods?: BlockedPeriod[];
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
