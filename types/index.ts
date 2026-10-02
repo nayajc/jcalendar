@@ -48,6 +48,7 @@ export interface Lawyer {
   embedConfig: EmbedConfig;
   intakeQuestions?: IntakeQuestion[];
   blockedPeriods?: BlockedPeriod[];
+  notificationEmails?: string[]; // 상담사 알림을 함께 받을 추가 수신자 (직원 등)
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }

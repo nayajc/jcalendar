@@ -141,6 +141,18 @@ export const translations = {
   // blocked periods
   'settings.blockedPeriods': { ko: '예약 차단 기간', en: 'Blocked periods' },
   'settings.blockedPeriodsHelper': { ko: '휴가, 공휴일 등 예약을 받지 않을 기간을 설정합니다. 해당 기간에는 슬롯이 노출되지 않습니다.', en: 'Set periods when you are unavailable (vacation, holidays, etc.). No slots will be shown during these dates.' },
+  'settings.notificationEmails': { ko: '추가 알림 수신자', en: 'Additional notification recipients' },
+  'settings.notificationEmailsHelper': {
+    ko: '새 예약·예약 취소 알림을 대표 이메일과 함께 받을 직원 이메일을 추가합니다. (최대 10명)',
+    en: 'Add staff emails that also receive new-booking and cancellation notices. (up to 10)',
+  },
+  'notify.empty': { ko: '추가된 수신자가 없습니다.', en: 'No additional recipients yet.' },
+  'notify.placeholder': { ko: 'staff@example.com', en: 'staff@example.com' },
+  'notify.add': { ko: '+ 추가', en: '+ Add' },
+  'notify.deleteAria': { ko: '수신자 삭제', en: 'Remove recipient' },
+  'notify.invalid': { ko: '유효한 이메일 형식이 아닙니다.', en: 'Enter a valid email address.' },
+  'notify.duplicate': { ko: '이미 추가된 이메일입니다.', en: 'This email is already added.' },
+  'notify.max': { ko: '추가 수신자는 최대 10명입니다.', en: 'You can add up to 10 recipients.' },
   'blocked.empty': { ko: '등록된 차단 기간이 없습니다.', en: 'No blocked periods yet.' },
   'blocked.labelPlaceholder': { ko: '메모 (예: 여름 휴가)', en: 'Note (e.g. Summer vacation)' },
   'blocked.startDate': { ko: '시작일', en: 'Start date' },

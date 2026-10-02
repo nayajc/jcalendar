@@ -36,6 +36,16 @@ function formatSlot(
   };
 }
 
+/**
+ * 상담사 대상 메일 수신자: 대표 이메일 + 추가 수신자(직원 등), 중복 제거.
+ */
+function lawyerRecipients(lawyer: Lawyer): string[] {
+  const all = [lawyer.email, ...(lawyer.notificationEmails ?? [])]
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean);
+  return [...new Set(all)];
+}
+
 function widgetUrl(appointment: Appointment): string {
   return `${BASE_URL}/widget/${appointment.lawyerId}`;
 }
@@ -88,7 +98,7 @@ export async function sendPendingEmails(
   await Promise.allSettled([
     resend.emails.send({
       from: EMAIL_FROM,
-      to: lawyer.email,
+      to: lawyerRecipients(lawyer),
       subject: `[새 예약] ${appointment.client.name}님 상담 요청 — ${lawyerSlot.start}`,
       html: lawyerHtml,
     }),
@@ -209,7 +219,7 @@ export async function sendCancelledEmail(
     );
     await resend.emails.send({
       from: EMAIL_FROM,
-      to: lawyer.email,
+      to: lawyerRecipients(lawyer),
       subject: `[예약 취소] ${appointment.client.name}님이 상담 예약을 취소했습니다`,
       html,
     });

@@ -70,6 +70,7 @@ export const lawyerSettingsSchema = z.object({
       label: z.string().max(100).optional(),
     })
   ).optional(),
+  notificationEmails: z.array(z.string().trim().toLowerCase().email('유효한 이메일 형식이 아닙니다').max(254)).max(10, '추가 수신자는 최대 10명입니다').optional(),
 });
 
 export type LawyerSettingsInput = z.infer<typeof lawyerSettingsSchema>;

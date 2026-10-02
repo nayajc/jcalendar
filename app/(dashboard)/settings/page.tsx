@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { WorkingHoursEditor } from '@/components/dashboard/WorkingHoursEditor';
 import { IntakeQuestionsEditor } from '@/components/dashboard/IntakeQuestionsEditor';
 import { BlockedPeriodsEditor } from '@/components/dashboard/BlockedPeriodsEditor';
+import { NotificationEmailsEditor } from '@/components/dashboard/NotificationEmailsEditor';
 import type { LawyerSettingsInput } from '@/lib/validators';
 import type { IntakeQuestion, BlockedPeriod } from '@/types';
 import { useLocale } from '@/lib/i18n/LocaleProvider';
@@ -32,6 +33,7 @@ export default function SettingsPage() {
     embedConfig: {},
     intakeQuestions: [],
     blockedPeriods: [],
+    notificationEmails: [],
   });
   const [loading, setLoading] = useState(false);
 
@@ -50,6 +52,7 @@ export default function SettingsPage() {
             workingHours: json.data?.workingHours ?? s.workingHours,
             intakeQuestions: json.data?.intakeQuestions ?? s.intakeQuestions,
             blockedPeriods: json.data?.blockedPeriods ?? s.blockedPeriods,
+            notificationEmails: json.data?.notificationEmails ?? s.notificationEmails,
           }));
         }
       } catch {
@@ -300,6 +303,18 @@ export default function SettingsPage() {
               />
             </div>
           </div>
+        </div>
+
+        {/* Notification recipients */}
+        <div className="card">
+          <h2 style={cardHeadingStyle}>{t('settings.notificationEmails')}</h2>
+          <p style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '20px' }}>
+            {t('settings.notificationEmailsHelper')}
+          </p>
+          <NotificationEmailsEditor
+            value={settings.notificationEmails ?? []}
+            onChange={(emails) => setSettings((s) => ({ ...s, notificationEmails: emails }))}
+          />
         </div>
 
         {/* Blocked periods */}

@@ -37,8 +37,17 @@ export async function PUT(req: Request) {
     );
   }
 
-  const { name, timezone, slotLength, bufferMinutes, workingHours, embedConfig, intakeQuestions } =
-    parseResult.data;
+  const {
+    name,
+    timezone,
+    slotLength,
+    bufferMinutes,
+    workingHours,
+    embedConfig,
+    intakeQuestions,
+    blockedPeriods,
+    notificationEmails,
+  } = parseResult.data;
 
   // Firestore 저장
   await adminDb
@@ -54,6 +63,10 @@ export async function PUT(req: Request) {
         workingHours,
         embedConfig,
         ...(intakeQuestions !== undefined ? { intakeQuestions } : {}),
+        ...(blockedPeriods !== undefined ? { blockedPeriods } : {}),
+        ...(notificationEmails !== undefined
+          ? { notificationEmails: [...new Set(notificationEmails)] }
+          : {}),
         updatedAt: Timestamp.now(),
       },
       { merge: true }
