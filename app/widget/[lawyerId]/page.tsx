@@ -26,7 +26,7 @@ export default async function WidgetPage({ params }: PageProps) {
     <WidgetClient
       lawyerId={lawyerId}
       lawyerName={lawyer.name}
-      embedConfig={lawyer.embedConfig}
+      embedConfig={lawyer.embedConfig ?? {}}
       intakeQuestions={lawyer.intakeQuestions ?? []}
     />
   );
