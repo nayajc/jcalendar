@@ -5,6 +5,10 @@ import { getFreeBusy, type BusyInterval } from '@/lib/google-calendar/freebusy';
 import { Timestamp } from 'firebase-admin/firestore';
 import type { Lawyer, AvailabilitySlot } from '@/types';
 
+/** 예약 가능한 최소 리드타임: 현재 시각 기준 3시간 이후 슬롯만 노출/예약 가능 */
+export const MIN_LEAD_HOURS = 3;
+export const MIN_LEAD_MS = MIN_LEAD_HOURS * 60 * 60 * 1000;
+
 function overlaps(
   slotStart: Date,
   slotEnd: Date,
@@ -102,13 +106,14 @@ export async function computeAvailableSlots(
   const stepMs = slotMs + bufferMs;
 
   const available: AvailabilitySlot[] = [];
+  const earliestStart = Date.now() + MIN_LEAD_MS;
   let cursor = workStart.getTime();
 
   while (cursor + slotMs <= workEnd.getTime()) {
     const slotStart = new Date(cursor);
     const slotEnd = new Date(cursor + slotMs);
 
-    if (!overlaps(slotStart, slotEnd, blocked)) {
+    if (cursor >= earliestStart && !overlaps(slotStart, slotEnd, blocked)) {
       available.push({
         start: slotStart.toISOString(),
         end: slotEnd.toISOString(),

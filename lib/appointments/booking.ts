@@ -3,6 +3,7 @@ import { randomBytes } from 'crypto';
 import { adminDb } from '@/lib/firebase/admin';
 import { appointmentConverter, slotConverter, lawyerConverter } from '@/lib/firebase/converters';
 import { createCalendarEvent } from '@/lib/google-calendar/events';
+import { MIN_LEAD_HOURS, MIN_LEAD_MS } from '@/lib/google-calendar/slots';
 import type { CreateAppointmentInput } from '@/lib/validators';
 
 const HOLD_HOURS = parseInt(process.env.APPOINTMENT_HOLD_HOURS ?? '24', 10);
@@ -31,6 +32,10 @@ export async function createAppointment(input: CreateAppointmentInput): Promise<
   const slotStartDate = new Date(slotStart);
   const slotEndDate = new Date(slotEnd);
   const slotStartUTC = slotStartDate.toISOString();
+
+  if (slotStartDate.getTime() < Date.now() + MIN_LEAD_MS) {
+    throw new ConflictError(`예약은 현재 시각 기준 ${MIN_LEAD_HOURS}시간 이후부터 가능합니다`);
+  }
 
   // 슬롯 락 문서 ID: 결정적(deterministic)
   const slotDocId = `${lawyerId}_${slotStartUTC}`;
